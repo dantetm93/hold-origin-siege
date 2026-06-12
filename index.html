@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOLD: Origin Siege — Cốt Truyện</title>
+<meta name="description" content="Thế giới và cốt truyện của HOLD: Origin Siege — Cội Nguồn, Hư Không, và cuộc trụ vững của Liên minh Ngũ Tộc.">
+<style>
+  /* Self-hosted Tomorrow (full glyph set incl. Vietnamese U+1EA0–U+1EF9).
+     Google's css2 CDN omits the Vietnamese subset, so we host it locally. */
+  @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:300; font-display:swap; src:url(fonts/Tomorrow-300.woff2) format("woff2"); }
+  @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:400; font-display:swap; src:url(fonts/Tomorrow-400.woff2) format("woff2"); }
+  @font-face { font-family:"Tomorrow"; font-style:italic; font-weight:400; font-display:swap; src:url(fonts/Tomorrow-400italic.woff2) format("woff2"); }
+  @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:500; font-display:swap; src:url(fonts/Tomorrow-500.woff2) format("woff2"); }
+  @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:600; font-display:swap; src:url(fonts/Tomorrow-600.woff2) format("woff2"); }
+  @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:700; font-display:swap; src:url(fonts/Tomorrow-700.woff2) format("woff2"); }
+  @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:900; font-display:swap; src:url(fonts/Tomorrow-900.woff2) format("woff2"); }
+  :root {
+    --bg:        #0a0e14;
+    --bg-2:      #0e141d;
+    --panel:     #121a25;
+    --panel-2:   #16202d;
+    --ink:       #d8e2ec;
+    --ink-soft:  #93a4b6;
+    --ink-dim:   #62748a;
+    --steel:     #2a3b4d;
+    --line:      #233141;
+    --cyan:      #36d1d8;
+    --cyan-soft: #7ce7ec;
+    --orange:    #ff8a3d;
+    --orange-soft:#ffb27a;
+    --void:      #b07bff;
+    --siege:     #8fe04a;
+    --siege-2:   #b07bff;
+    --maxw:      900px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(1200px 700px at 50% -200px, rgba(54,209,216,.10), transparent 60%),
+      radial-gradient(900px 600px at 90% 10%, rgba(255,138,61,.06), transparent 55%),
+      radial-gradient(900px 700px at 5% 40%, rgba(176,123,255,.06), transparent 55%),
+      var(--bg);
+    color: var(--ink);
+    font-family: "Tomorrow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight: 400;
+    line-height: 1.75;
+    font-size: 17px;
+    letter-spacing: .1px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 22px 120px; }
+
+  /* ---- Hero ---- */
+  header.hero {
+    position: relative;
+    text-align: center;
+    padding: 90px 22px 70px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+    background:
+      linear-gradient(180deg, rgba(18,26,37,.0), rgba(10,14,20,.6)),
+      repeating-linear-gradient(115deg, rgba(54,209,216,.035) 0 2px, transparent 2px 26px);
+  }
+  .hero .eyebrow {
+    font-family: "Tomorrow", sans-serif;
+    font-weight: 700;
+    letter-spacing: 6px;
+    font-size: 12px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .hero h1 {
+    font-family: "Tomorrow", sans-serif;
+    font-weight: 900;
+    font-size: clamp(34px, 7vw, 68px);
+    line-height: .98;
+    margin: 0;
+    background: linear-gradient(180deg, #ffffff 0%, var(--cyan-soft) 60%, var(--cyan) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 38px rgba(54,209,216,.25);
+  }
+  .hero h1 .siege-word {
+    background: linear-gradient(180deg, #ffffff 0%, var(--orange-soft) 60%, var(--orange) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-shadow: 0 0 38px rgba(255,138,61,.22);
+  }
+  .hero .sub {
+    margin-top: 16px;
+    font-size: clamp(15px, 2.6vw, 19px);
+    color: var(--ink-soft);
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .hero .tagline {
+    max-width: 640px;
+    margin: 26px auto 0;
+    color: var(--ink);
+    font-size: clamp(16px, 2.4vw, 19px);
+    font-style: italic;
+    font-weight: 300;
+  }
+  .scanline {
+    position:absolute; inset:0; pointer-events:none;
+    background: repeating-linear-gradient(180deg, rgba(255,255,255,.012) 0 1px, transparent 1px 3px);
+    mix-blend-mode: overlay;
+  }
+
+  /* ---- Sections ---- */
+  section { margin-top: 60px; }
+  .num {
+    font-family: "Tomorrow", sans-serif;
+    color: var(--cyan);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 3px;
+  }
+  h2 {
+    font-family: "Tomorrow", sans-serif;
+    font-weight: 700;
+    font-size: clamp(22px, 4vw, 30px);
+    line-height: 1.2;
+    margin: 8px 0 4px;
+    color: #eaf2f8;
+  }
+  h2 .accent { color: var(--cyan); }
+  .lead { color: var(--ink-soft); font-weight: 300; font-size: 18px; margin-top: 0; }
+  h2 + .rule {
+    height: 2px; width: 64px; margin: 14px 0 22px;
+    background: linear-gradient(90deg, var(--cyan), transparent);
+  }
+  p { margin: 0 0 18px; }
+  strong { color: #f1f6fb; font-weight: 600; }
+  em { color: var(--cyan-soft); font-style: italic; }
+  .term { color: var(--orange-soft); font-weight: 600; }
+  .void-term { color: var(--void); font-weight: 600; }
+
+  /* ---- Cards / callouts ---- */
+  .panel {
+    background: linear-gradient(180deg, var(--panel), var(--bg-2));
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin: 22px 0;
+  }
+  .note {
+    border-left: 3px solid var(--cyan);
+    background: linear-gradient(90deg, rgba(54,209,216,.06), transparent 80%);
+    border-radius: 0 12px 12px 0;
+    padding: 16px 20px;
+    margin: 22px 0;
+    color: var(--ink-soft);
+    font-size: 15.5px;
+  }
+  .note.orange { border-left-color: var(--orange); background: linear-gradient(90deg, rgba(255,138,61,.06), transparent 80%); }
+  .note.void   { border-left-color: var(--void);   background: linear-gradient(90deg, rgba(176,123,255,.07), transparent 80%); }
+  .note b { color: #eaf2f8; }
+
+  /* ---- Tables ---- */
+  .tbl { width: 100%; border-collapse: collapse; margin: 14px 0 6px; font-size: 15.5px; }
+  .tbl th {
+    text-align: left;
+    font-family: "Tomorrow", sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--cyan);
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tbl td {
+    padding: 14px;
+    border-bottom: 1px solid rgba(35,49,65,.6);
+    vertical-align: top;
+    color: var(--ink-soft);
+  }
+  .tbl td strong { color: #eaf2f8; }
+  .tbl tr:hover td { background: rgba(54,209,216,.03); }
+  .tbl .lead-cell { color: var(--orange-soft); font-weight: 600; white-space: nowrap; }
+
+  /* ---- Origin / element chips ---- */
+  .wheel { display:flex; flex-wrap:wrap; gap:9px; margin:18px 0 4px; }
+  .chip {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 7px 15px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    background: var(--panel-2);
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .chip .dot { width:9px; height:9px; border-radius:50%; box-shadow:0 0 10px currentColor; }
+  .dot.earth{color:#c9a36a} .dot.elec{color:#ffd84d} .dot.water{color:#4db4ff}
+  .dot.fire{color:#ff7a3d} .dot.ice{color:#8fe2ff} .dot.wind{color:#9be8b0}
+  .dot.poison{color:#a6e04a} .dot.light{color:#fff2c2} .dot.dark{color:#a07bff}
+  .dot.neutral{color:#b8c4d0}
+
+  .loop-grid { display:grid; grid-template-columns:1fr; gap:14px; margin-top:8px; }
+  .loop {
+    background: linear-gradient(180deg, var(--panel), var(--bg-2));
+    border:1px solid var(--line); border-left:3px solid var(--orange);
+    border-radius: 0 12px 12px 0; padding:18px 20px;
+  }
+  .loop h3 { margin:0 0 6px; font-family:"Tomorrow",sans-serif; font-size:16px; color:#eaf2f8; letter-spacing:.5px; }
+  .loop p { margin:0; color:var(--ink-soft); font-size:15.5px; }
+  .loop.clan { border-left-color: var(--void); }
+
+  /* ---- Footer ---- */
+  footer {
+    margin-top: 80px; padding-top: 28px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-dim); font-size: 13px; text-align:center;
+  }
+  footer .title { font-family:"Tomorrow",sans-serif; color:var(--ink-soft); letter-spacing:2px; }
+
+  a { color: var(--cyan); }
+  ::selection { background: rgba(54,209,216,.3); color:#fff; }
+
+  @media (max-width:560px){
+    body{ font-size:16px; }
+    .tbl, .tbl tbody, .tbl tr, .tbl td { display:block; width:100%; }
+    .tbl thead { display:none; }
+    .tbl td { border-bottom:none; padding:4px 0; }
+    .tbl tr { border-bottom:1px solid var(--line); padding:14px 0; display:block; }
+    .tbl .lead-cell { color:var(--orange-soft); font-size:16px; margin-bottom:4px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="scanline"></div>
+  <div class="eyebrow">Cốt Truyện · World Lore</div>
+  <h1>HOLD<br><span class="siege-word">ORIGIN SIEGE</span></h1>
+  <div class="sub">Vây Hãm Cội Nguồn</div>
+  <p class="tagline">Thực tại vận hành nhờ một mạch nguồn duy nhất. Có thứ đã xé toạc nó. Mỗi đêm, bạn phải <strong>TRỤ VỮNG</strong>.</p>
+</header>
+
+<div class="wrap">
+
+  <!-- Logline -->
+  <section>
+    <div class="num">// MỞ ĐẦU</div>
+    <h2>Lời <span class="accent">dẫn</span></h2>
+    <div class="rule"></div>
+    <p>Toàn bộ thực tại vận hành nhờ một mạch nguồn duy nhất, gọi là <span class="term">Cội Nguồn</span> (the Origin). Bên ngoài nó là <span class="void-term">Hư Không</span> (the Void) — một <em>phi-cảnh-giới</em> của sự hỗn loạn mang theo ý chí, đã ép mình vào tạo hóa suốt một thiên niên kỷ.</p>
+    <p>Cuối cùng, nó đã chọc thủng qua: một <span class="void-term">Vết Nứt</span> (the Breach). Từ vết thương ấy tuôn ra <span class="term">Bầy Vây Hãm</span> (the Siege) — một bầy đàn tự nhân bản, ăn tươi nuốt sống chính tạo hóa, và bò về phía thứ ánh sáng duy nhất đáng để ngấu nghiến.</p>
+    <p>Bạn chỉ huy pháo đài cuối cùng được dựng <strong>ngay trên đỉnh Cội Nguồn</strong>. Mỗi đêm, bạn <strong>TRỤ VỮNG</strong>. Và — qua một chiến dịch dài đằng đẵng của những mỏ neo bị hạ gục và lãnh thổ được giành lại — bạn <em>có thể</em> bịt kín vết thương ấy mãi mãi.</p>
+  </section>
+
+  <!-- Title meaning -->
+  <section>
+    <div class="num">// Ý NGHĨA TỰA ĐỀ</div>
+    <h2>Hai tầng nghĩa của <span class="accent">"Origin Siege"</span></h2>
+    <div class="rule"></div>
+    <p>Tên gọi <strong>"Origin Siege" — Vây Hãm Cội Nguồn</strong> cố tình mang hai lưỡi nghĩa:</p>
+    <div class="panel">
+      <p style="margin-bottom:14px"><span class="term">▸ Cuộc vây hãm <em>nhắm vào</em> Cội Nguồn</span> — bầy đàn của Hư Không vây hãm mạch nguồn để dập tắt nó.</p>
+      <p style="margin:0"><span class="term">▸ Cuộc vây hãm <em>được trấn giữ bởi</em> các Tộc Nguồn</span> — năm chủng loài (trục <strong>Origin</strong>) mà liên minh đầy bất an của họ chính là lằn ranh phòng thủ.</p>
+    </div>
+    <p>Toàn bộ trò chơi là cuộc giằng co ấy — và sự xoay chuyển chậm rãi của nó.</p>
+  </section>
+
+  <!-- The Origin -->
+  <section>
+    <div class="num">// CỘI NGUỒN</div>
+    <h2>Cội Nguồn — <span class="accent">mạch nguồn</span></h2>
+    <p class="lead">Vì sao căn cứ của bạn rỉ ra tài nguyên bất tận.</p>
+    <div class="rule"></div>
+    <p><span class="term">Cội Nguồn</span> là một mạch nguồn nguyên thủy, nơi <strong>mười nguyên tố</strong> tuôn chảy: <strong>Vòng Tròn Tự Nhiên</strong> bảy nguyên tố (Đất → Lôi → Thủy → Hỏa → Băng → Phong → Độc) cùng cặp <strong>Quang/Ám đối ngẫu</strong> bao quanh nó. Đó là điểm khởi sinh của vật chất, năng lượng và sự sống — và là thứ duy nhất trong tồn tại mà Hư Không không thể chỉ đơn thuần xóa bỏ từ xa.</p>
+    <div class="note">
+      <p style="margin:0 0 12px"><b>Đại bản doanh (HQ) tọa lạc ngay trên mạch nguồn</b> — đó là lý do nó <em>rỉ</em> tài nguyên liên tục, kể cả khi bạn ngoại tuyến. Dòng chảy ấy <strong>chính là</strong> cơ chế <b>thu nhập nhàn rỗi</b> (idle): bạn không "thu tiền", bạn đang khai thác dòng máu không ngừng của Cội Nguồn.</p>
+      <p style="margin:0"><b>Nâng cấp HQ là giành lại lãnh thổ quanh mạch nguồn.</b> Mỗi vành đai chiến trường mở thêm sau mỗi 10 cấp HQ là phần đất bị đẩy lùi khỏi Bầy Vây Hãm — chính là tiền tuyến của cuộc chiến, lan rộng ra ngoài khi bạn mạnh lên.</p>
+    </div>
+  </section>
+
+  <!-- The Void and Breach -->
+  <section>
+    <div class="num">// HƯ KHÔNG &amp; VẾT NỨT</div>
+    <h2>Hư Không và <span class="accent">Vết Nứt</span></h2>
+    <p class="lead">Kẻ thù — và vì sao cuộc chiến này <em>có thể thắng</em>.</p>
+    <div class="rule"></div>
+    <div class="note void">
+      <p style="margin:0"><b>Hư Không là một thế lực riêng — KHÔNG phải nguyên tố Ám.</b> Ám chỉ là một kênh bình thường của Cội Nguồn (nửa "hủy diệt" trong cặp đối ngẫu Quang/Ám). <span class="void-term">Hư Không</span> là thứ hoàn toàn khác: phi-cảnh-giới <em>bên ngoài</em> ánh sáng của Cội Nguồn, nơi sự tồn tại mỏng dần về hư vô.</p>
+    </div>
+    <p>Hư Không không có vòng tròn, không có chu kỳ, không có sáng tạo — chỉ có cơn đói. Suốt một thiên niên kỷ nó ép mình vào lớp vỏ của thực tại; <span class="void-term">Vết Nứt</span> là nơi nó cuối cùng xé toạc qua, ngay phía trên Cội Nguồn này. Nó không hẳn <em>hủy diệt</em> thứ nó chạm tới, mà <strong>viết lại</strong> chúng: vật chất sống bị kéo gần Vết Nứt sẽ bị tháo rời và tái sinh thành <span class="term">Bầy Vây Hãm</span>.</p>
+    <p><strong>Cuộc chiến có thể thắng — qua cả một chiến dịch, không phải một đêm.</strong> Vết Nứt bị giữ mở từ phía bên kia bởi những <span class="void-term">Kẻ Nuốt Thế Giới</span> (World-Eaters) — những mỏ neo sống khổng lồ (chính là các <em>boss bang hội</em>) mà khối lượng của chúng giữ cho vết thương luôn giãn rộng. Mỗi Kẻ Nuốt Thế Giới bị hạ gục sẽ khép lại một mảng Vết Nứt và trả lại chừng ấy thực tại cho Cội Nguồn. Chân trời chiến thắng của cả trò chơi là <strong>bịt kín Vết Nứt</strong> bằng cách bào mòn từng mỏ neo của nó.</p>
+    <p>Đây là lý do vòng lặp từng phút vẫn là <em>một cuộc Trụ Vững không có màn-hình-thua</em> — một đêm phòng thủ đơn lẻ không thể khép một vết thương vũ trụ, nên việc mất HQ là một bước lùi, không phải dấu chấm hết, và bầy đàn đêm đó vẫn cứ đổ về không ngừng. Nhưng <strong>cuộc chiến tổng thể thì uốn chuyển</strong>: những vành đai giành lại, những mỏ neo đã chết, và một Vết Nứt đang co lại — đó là tiến triển thật, bền vững, hướng về một kết thúc thật.</p>
+  </section>
+
+  <!-- The Siege -->
+  <section>
+    <div class="num">// BẦY VÂY HÃM</div>
+    <h2>Bầy <span class="accent">Vây Hãm</span></h2>
+    <p class="lead">Tạo hình kẻ thù, được lý giải.</p>
+    <div class="rule"></div>
+    <p>Bầy Vây Hãm có lớp giáp kitin, là một tâm trí bầy đàn, <strong style="color:var(--siege)">phát quang sinh học xanh lục / tím</strong>, và nhân bản vô tận — là vật chất đã bị Hư Không viết lại, không phải một loài. Đó là lý do của sự tương phản gay gắt trong định hướng nghệ thuật: <strong>những người hùng và công trình rực sáng, ấm áp sắc lam-cyan và cam</strong> (trật tự của mạch nguồn) đối đầu với <strong style="color:var(--siege)">lũ quái vật phát quang ma quái</strong> (sự viết lại). Lũ Chạy (Runner), Hộ Pháp (Bruiser), Phun Độc (Spitter) và Bạo Chúa Tổ (Hive-Tyrant) đều là những biểu hiện leo thang của cùng một cơn đói, mỗi con mang một <em>thẻ nguyên tố</em> — Bầy Vây Hãm tha hóa <em>thông qua</em> một kênh nguyên tố, nên các người hùng hệ Quang và Ám là những chuyên gia khắc chế từng loại tha hóa cụ thể.</p>
+  </section>
+
+  <!-- The five Origins -->
+  <section>
+    <div class="num">// LIÊN MINH NGŨ TỘC</div>
+    <h2>Năm Tộc Nguồn — <span class="accent">liên minh của bạn</span></h2>
+    <p class="lead">Vì sao các người hùng kề vai sát cánh dù khác biệt.</p>
+    <div class="rule"></div>
+    <p>Những người trấn giữ không phải cùng một dân tộc. Khi mạch nguồn lần đầu gào thét, năm chủng loài đã đáp lời, và pháo đài là liên minh ra đời từ sự bức thiết của họ. Đây là lý do (trong cốt truyện) vì sao người hùng được <strong>sưu tập và triển khai từng người một</strong>, và vì sao <strong>mọi tổ hợp Tộc × Nguyên tố × Loại sát thương đều hợp lệ</strong> — họ là đồng minh, không phải một học thuyết duy nhất, mỗi người mang theo cách dẫn truyền Cội Nguồn của riêng mình.</p>
+
+    <table class="tbl">
+      <thead><tr><th style="width:24%">Tộc Nguồn</th><th style="width:46%">Họ là ai</th><th>Lối trấn giữ</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="lead-cell">Nhân Loại<br><span style="color:var(--ink-dim);font-weight:400;font-size:13px">Human</span></td>
+          <td>Những kẻ sống sót của quân đoàn vũ trang doanh nghiệp — đội quân kỷ luật cuối cùng. <em>(Trung sĩ Raylan, người hùng khởi đầu miễn phí: cựu binh dạy bạn cách giữ lằn ranh.)</em></td>
+          <td><strong>Giữ vững tường thành.</strong> Căn bản vững chãi, không mánh khóe.</td>
+        </tr>
+        <tr>
+          <td class="lead-cell">Sinh Thể<br><span style="color:var(--ink-dim);font-weight:400;font-size:13px">Bio / Augmented</span></td>
+          <td>Lính xung kích được cải biến sinh học, da thịt thích nghi với mé Vết Nứt thay vì gục ngã. <em>(Biomorph.)</em></td>
+          <td><strong>Mạnh dần từ bên trong</strong> — trận càng dai, càng khó giết.</td>
+        </tr>
+        <tr>
+          <td class="lead-cell">Dị Tộc<br><span style="color:var(--ink-dim);font-weight:400;font-size:13px">Xeno</span></td>
+          <td>Một <strong>dân tộc du hành giữa các vì sao</strong>, từng chiến đấu với Hư Không — và đã mất chính Cội Nguồn của mình vào tay nó. Họ đến để giữ mạch nguồn <em>này</em>, và là những người giữ ký ức của pháo đài về thứ đang ở phía bên kia. <em>(Quasar.)</em></td>
+          <td><strong>Lan tỏa ra ngoài</strong> — biến một tia lửa thành cả biển lửa phủ kín chiến trường.</td>
+        </tr>
+        <tr>
+          <td class="lead-cell">Cơ Giáp<br><span style="color:var(--ink-dim);font-weight:400;font-size:13px">Mecha / Bot</span></td>
+          <td>Những cỗ chiến đài công nghiệp — lò rèn của pháo đài biết đi, triển khai bầy drone chiến đấu. <em>(Forge-9.)</em></td>
+          <td><strong>Trụ chốt và chỉ huy</strong> — xương sống của phòng thủ căn cứ.</td>
+        </tr>
+        <tr>
+          <td class="lead-cell">Hư Tộc<br><span style="color:var(--ink-dim);font-weight:400;font-size:13px">Void</span></td>
+          <td>Những kẻ đã <strong>bước vào Vết Nứt và trở về biến đổi</strong> — có thể gập lại khoảng không gian mà Hư Không đã làm mỏng, với cái giá là một thân xác chỉ còn nửa phần hiện hữu. <em>(Void Stalker.)</em></td>
+          <td><strong>Quật lại bản chất của chính vết thương</strong> — sát thủ "bình thủy tinh", bước xuyên không gian.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note orange">
+      <p style="margin:0 0 12px"><b>Dị Tộc là khách đến, không phải kẻ phản bội.</b> Bầy Vây Hãm <em>trông</em> giống côn trùng, nên để tránh nhập nhằng, Dị Tộc chơi được là một dân tộc bên ngoài, không cùng huyết thống với bầy đàn: những cựu binh của Hư Không đã đến để trợ giúp, và họ <em>hiểu rõ</em> kẻ thù vì nó đã từng cướp đi thế giới của họ.</p>
+      <p style="margin:0"><b>Hư Tộc (origin) ≠ nguyên tố Ám (element).</b> Một người hùng Hư Tộc có thể mang bất kỳ nguyên tố nào trong mười nguyên tố; "tộc" mô tả <em>việc băng qua Vết Nứt đã làm gì với thân xác họ</em> (mong manh, nhanh nhẹn, bùng nổ — nửa-hiện-hữu và mượn sự bất chấp không gian của Hư Không). <strong>Void Stalker</strong> <em>tình cờ</em> dẫn truyền hệ <strong>Ám</strong>, khiến cô thành chuyên gia khắc chế hệ Quang — nhưng đó là thuộc tính nguyên tố của cô, hoàn toàn độc lập với gốc Hư Tộc.</p>
+    </div>
+  </section>
+
+  <!-- The ten elements -->
+  <section>
+    <div class="num">// MƯỜI NGUYÊN TỐ</div>
+    <h2>Mười nguyên tố — <span class="accent">các kênh của Cội Nguồn</span></h2>
+    <div class="rule"></div>
+    <p>Mỗi người hùng <strong>dẫn truyền một kênh</strong> ngay từ khi sinh ra — cố định, vì sự dẫn truyền là <em>bản sắc</em>, không phải đồ trang bị thay đổi được. <strong>Vòng Tròn Tự Nhiên</strong> là chu kỳ khỏe mạnh của Cội Nguồn (mỗi nguyên tố nuôi nguyên tố kế tiếp và khắc chế một nguyên tố). <strong>Quang</strong> là lực sáng tạo, <strong>Ám</strong> là lực hủy diệt của nó — hai kẻ tử thù vĩnh cửu, trung lập với cả vòng tròn. Không nguyên tố nào trong mười nguyên tố <em>là</em> Hư Không; tất cả đều là những mặt của Cội Nguồn mà Hư Không muốn bịt miệng.</p>
+    <div class="wheel">
+      <span class="chip"><span class="dot earth"></span>Đất</span>
+      <span class="chip"><span class="dot elec"></span>Lôi</span>
+      <span class="chip"><span class="dot water"></span>Thủy</span>
+      <span class="chip"><span class="dot fire"></span>Hỏa</span>
+      <span class="chip"><span class="dot ice"></span>Băng</span>
+      <span class="chip"><span class="dot wind"></span>Phong</span>
+      <span class="chip"><span class="dot poison"></span>Độc</span>
+      <span class="chip"><span class="dot light"></span>Quang</span>
+      <span class="chip"><span class="dot dark"></span>Ám</span>
+      <span class="chip"><span class="dot neutral"></span>Trung Tính</span>
+    </div>
+  </section>
+
+  <!-- The war / loops -->
+  <section>
+    <div class="num">// CUỘC CHIẾN</div>
+    <h2>Cuộc chiến, kể bằng <span class="accent">cốt truyện</span></h2>
+    <p class="lead">Mỗi mảnh khớp 1:1 với các vòng lặp lối chơi.</p>
+    <div class="rule"></div>
+    <div class="loop-grid">
+      <div class="loop">
+        <h3>Màn Căn Cứ = cuộc Trụ Vững</h3>
+        <p>Xây dựng, phòng thủ, giành lại — theo từng chu kỳ. Công trình gánh lằn ranh; một người hùng hỗ trợ (chế độ Tự Động). Bầy Vây Hãm sinh ra ở <em>tiền tuyến</em> — mé vùng đất bạn đã giành lại — và hội tụ về mạch nguồn ở trung tâm.</p>
+      </div>
+      <div class="loop">
+        <h3>Màn Boss = cuộc Xuất Kích</h3>
+        <p>Bạn rời tường thành để đánh thẳng vào một mỏ neo tại nguồn của nó. <em>Cuộc đua sát thương 60 giây</em> là cửa sổ tấn công trước khi bầy đàn nuốt chửng đợt xuất kích — và sát thương dở dang vẫn được tính, vì <em>bào mòn mỏ neo</em> chính là cách Vết Nứt khép lại.</p>
+      </div>
+      <div class="loop">
+        <h3>Hai ngả boss, hai câu chuyện</h3>
+        <p><strong>Boss tìm đến bạn</strong> (Bạo Chúa đỉnh-đợt-sóng tấn công căn cứ → rơi <em>vật liệu xây dựng</em>) đối lại <strong>bạn tìm đến boss</strong> (xuất kích đánh một mỏ neo được chọn / sự kiện → rơi <em>tài nguyên cường hóa người hùng</em>).</p>
+      </div>
+      <div class="loop clan">
+        <h3>Boss Bang Hội = một Kẻ Nuốt Thế Giới</h3>
+        <p>Một mỏ neo khổng lồ, quá vĩ đại cho một pháo đài đơn lẻ. Cả bang chia chung <strong>một thanh máu gộp</strong>; mỗi thành viên tự chạy đợt xuất kích 60 giây của mình lên một bản sao, sát thương dồn lại bào mòn Kẻ Nuốt Thế Giới qua nhiều ngày. <em>Bất đồng bộ theo thiết kế</em> — không hai pháo đài nào cùng giữ một mảnh đất một lúc, nên họ thay phiên gây thương tích cho nó. (Cũng là điểm nối tự nhiên cho các trụ cột <em>co-op / xã hội / giao thương</em> trong tương lai: liên minh tồn tại <em>bởi vì</em> không thể hạ Kẻ Nuốt Thế Giới một mình.)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Economy -->
+  <section>
+    <div class="num">// KINH TẾ</div>
+    <h2>Nền kinh tế, dưới góc nhìn <span class="accent">cốt truyện</span></h2>
+    <div class="rule"></div>
+    <table class="tbl">
+      <thead><tr><th style="width:22%">Tài nguyên</th><th>Bản chất thật sự</th></tr></thead>
+      <tbody>
+        <tr><td class="lead-cell">Vàng<br><span style="color:var(--ink-dim);font-weight:400;font-size:13px">Gold</span></td><td><strong>Vật-chất-Cội-Nguồn tinh luyện</strong> — thứ phổ thông mà mạch nguồn rỉ ra. Dùng xây và nâng cấp pháo đài.</td></tr>
+        <tr><td class="lead-cell">Lõi<br><span style="color:var(--ink-dim);font-weight:400;font-size:13px">Cores</span></td><td><strong>Mảnh-Cội-Nguồn kết tinh, giật ra từ xác Bạo Chúa</strong> — đặc hơn, hiếm hơn. Xây dựng bậc cao. <em>(Phân biệt tên gọi: <b>Lõi</b> = vật liệu xây dựng; <b>Mảnh</b> = trang bị.)</em></td></tr>
+        <tr><td class="lead-cell">Kim Cương<br><span style="color:var(--ink-dim);font-weight:400;font-size:13px">Diamond</span></td><td><strong>Ánh-sáng-Cội-Nguồn tinh khiết</strong> — chất tinh chiết hiếm nhất, chỉ giành được từ các đợt xuất kích boss. Cường hóa người hùng (cấp độ, mở giới hạn, Mảnh, Hạt Giống, tinh chỉnh). <strong>Kiếm được, không bao giờ mua bằng tiền thật</strong> — pháo đài được trả công bằng máu, không phải bằng tiền.</td></tr>
+      </tbody>
+    </table>
+    <div class="panel">
+      <p style="margin:0 0 12px"><span class="term">Mảnh (Shards)</span> — năng lượng thô của Cội Nguồn kết tinh thành một trong <strong>mười màu nguyên tố</strong>; lắp một viên sẽ dẫn truyền người hùng sâu hơn vào kênh đó (sát thương nguyên tố, kháng nguyên tố, và hiệu ứng kích hoạt đặc trưng của nó).</p>
+      <p style="margin:0 0 12px"><span class="term">Hạt Giống Kỹ Năng (Skill Seeds)</span> — những <strong>mầm kỹ năng ngủ yên</strong> nảy mầm trong ổ cắm của trang bị: kỹ thuật tiềm ẩn mà Cội Nguồn nuôi lớn khi được trao một chốn dung thân, trao cho người hùng thêm một kỹ năng chủ động bên cạnh bộ kỹ năng gốc.</p>
+      <p style="margin:0"><span class="term">Trang Bị (Gear)</span> — khí giới do pháo đài rèn, được "roll" trên cùng bậc thang năm cấp (Phổ thông → Thần thoại) như mọi thứ khác bị giật ra từ — hoặc được nuôi lớn bởi — Cội Nguồn.</p>
+    </div>
+  </section>
+
+  <!-- Caps & Kits -->
+  <section>
+    <div class="num">// CƯỜNG HÓA</div>
+    <h2>Mở giới hạn &amp; <span class="accent">Bộ Kỹ Năng (Kit)</span>, dưới góc cốt truyện</h2>
+    <div class="rule"></div>
+    <p>Đẩy một người hùng vượt qua giới hạn cấp độ là <strong>cưỡng ép một đợt dẫn truyền sâu hơn mức một thân xác nên giữ an toàn</strong> — phần lớn các lần thử sẽ đốt sạch Kim Cương mà không thành, và trần cứng ở <strong>cấp 150</strong> là giới hạn của những gì da thịt, máy móc, hay kẻ-chạm-Hư-Không có thể dẫn truyền trước khi Cội Nguồn xóa bỏ họ. Đó là lý do mỗi lần phá giới hạn lại mở khóa một <strong>Bộ Kỹ Năng (Kit)</strong> mới: một Kit là <em>một cách dẫn truyền mới</em>, chỉ chạm tới được khi người hùng đã sống sót qua một đợt dẫn truyền sâu hơn.</p>
+  </section>
+
+  <footer>
+    <div class="title">HOLD: ORIGIN SIEGE</div>
+    <p>Cốt truyện thế giới · Bản tiếng Việt. <em>"HOLD: Origin Siege"</em> là tựa game; <em>arpg-bb</em> / <em>rpgbunker</em> chỉ là tên thư mục.<br>Các quy tắc cơ chế nằm ở tài liệu thiết kế và luôn được ưu tiên khi có mâu thuẫn.</p>
+  </footer>
+
+</div>
+</body>
+</html>
