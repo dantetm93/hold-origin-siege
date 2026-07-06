@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOLD: Origin Siege — Character Build &amp; Growth</title>
+<meta name="description" content="How you build and grow a character in HOLD: Origin Siege — one created character, awakened Talents, the two-layer power model, the Awakening economy, Domains, leveling, and the Summon pillar.">
+<style>
+  /* Self-hosted Tomorrow (same set as lore-vi.html). */
+  @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:300; font-display:swap; src:url(fonts/Tomorrow-300.woff2) format("woff2"); }
+  @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:400; font-display:swap; src:url(fonts/Tomorrow-400.woff2) format("woff2"); }
+  @font-face { font-family:"Tomorrow"; font-style:italic; font-weight:400; font-display:swap; src:url(fonts/Tomorrow-400italic.woff2) format("woff2"); }
+  @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:500; font-display:swap; src:url(fonts/Tomorrow-500.woff2) format("woff2"); }
+  @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:600; font-display:swap; src:url(fonts/Tomorrow-600.woff2) format("woff2"); }
+  @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:700; font-display:swap; src:url(fonts/Tomorrow-700.woff2) format("woff2"); }
+  @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:900; font-display:swap; src:url(fonts/Tomorrow-900.woff2) format("woff2"); }
+  :root {
+    --bg:#0a0e14; --bg-2:#0e141d; --panel:#121a25; --panel-2:#16202d; --panel-3:#1b2735;
+    --ink:#d8e2ec; --ink-soft:#93a4b6; --ink-dim:#62748a;
+    --steel:#2a3b4d; --line:#233141; --line-hi:#2f4358;
+    --cyan:#36d1d8; --cyan-soft:#7ce7ec;
+    --orange:#ff8a3d; --orange-soft:#ffb27a;
+    --void:#b07bff; --siege:#8fe04a;
+    /* element wheel — 1:1 with UITheme.ElementColor */
+    --e-earth:#8c6638; --e-electric:#f2d940; --e-water:#4d99f2; --e-fire:#f26633;
+    --e-ice:#8cd9f2; --e-wind:#8ce6a6; --e-poison:#8ccc40; --e-light:#fff2b3;
+    --e-dark:#8c59bf; --e-twilight:#c25fa0;
+    /* tier ladder */
+    --t-d:#7c8a99; --t-c:#8fe04a; --t-b:#36d1d8; --t-a:#b07bff; --t-s:#ff8a3d; --t-ss:#ffd24a; --t-sss:#ff6fb0;
+    --maxw:960px;
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    margin:0;
+    background:
+      radial-gradient(1200px 700px at 50% -220px, rgba(54,209,216,.10), transparent 60%),
+      radial-gradient(900px 600px at 92% 6%, rgba(255,138,61,.06), transparent 55%),
+      radial-gradient(900px 720px at 4% 42%, rgba(176,123,255,.06), transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    font-family:"Tomorrow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight:400; line-height:1.7; font-size:16.5px; letter-spacing:.1px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap { max-width:var(--maxw); margin:0 auto; padding:0 22px 120px; }
+  a { color:var(--cyan-soft); text-decoration:none; border-bottom:1px solid rgba(124,231,236,.25); }
+  a:hover { border-bottom-color:var(--cyan-soft); }
+
+  /* ---- Hero ---- */
+  header.hero {
+    position:relative; text-align:center; padding:86px 22px 60px; overflow:hidden;
+    border-bottom:1px solid var(--line);
+    background:
+      linear-gradient(180deg, rgba(18,26,37,0), rgba(10,14,20,.6)),
+      repeating-linear-gradient(115deg, rgba(54,209,216,.035) 0 2px, transparent 2px 26px);
+  }
+  .hero .eyebrow { font-weight:700; letter-spacing:6px; font-size:12px; color:var(--cyan); text-transform:uppercase; margin-bottom:16px; }
+  .hero h1 {
+    font-weight:900; font-size:clamp(34px,7vw,66px); line-height:.98; margin:0;
+    background:linear-gradient(180deg,#fff 0%, var(--cyan-soft) 60%, var(--cyan) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 0 38px rgba(54,209,216,.22);
+  }
+  .hero h1 .amber { background:linear-gradient(180deg,#fff 0%, var(--orange-soft) 60%, var(--orange) 100%); -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:0 0 38px rgba(255,138,61,.20); }
+  .hero .sub { margin-top:16px; font-size:clamp(14px,2.6vw,18px); color:var(--ink-soft); font-weight:500; letter-spacing:2px; text-transform:uppercase; }
+  .hero .tagline { max-width:660px; margin:24px auto 0; color:var(--ink); font-size:clamp(15px,2.4vw,18px); font-style:italic; font-weight:300; }
+  .scanline { position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(180deg, rgba(255,255,255,.012) 0 1px, transparent 1px 3px); mix-blend-mode:overlay; }
+
+  /* identity stack chips under hero */
+  .stack { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; max-width:760px; margin:30px auto 0; }
+  .stack .s { font-size:12.5px; letter-spacing:.4px; padding:6px 12px; border:1px solid var(--line-hi); border-radius:999px; background:var(--panel); color:var(--ink-soft); }
+  .stack .s b { color:var(--ink); font-weight:600; }
+  .stack .s.key { border-color:rgba(255,138,61,.5); background:rgba(255,138,61,.08); color:var(--orange-soft); }
+
+  /* ---- Sections ---- */
+  section { margin-top:64px; scroll-margin-top:20px; }
+  .kicker { display:flex; align-items:baseline; gap:14px; margin-bottom:8px; }
+  .num { color:var(--cyan); font-weight:700; font-size:14px; letter-spacing:2px; }
+  h2 { font-weight:800; font-size:clamp(22px,3.6vw,30px); margin:0; line-height:1.15; letter-spacing:.2px; }
+  .lead { color:var(--ink-soft); font-size:16px; margin:8px 0 20px; max-width:70ch; }
+  h3 { font-weight:700; font-size:17px; margin:26px 0 10px; color:var(--ink); letter-spacing:.2px; }
+  p { margin:12px 0; }
+  strong { color:#eaf1f8; font-weight:600; }
+  .dim { color:var(--ink-dim); }
+
+  /* ---- Cards / grid ---- */
+  .grid { display:grid; gap:16px; }
+  .g2 { grid-template-columns:repeat(2,1fr); }
+  .g3 { grid-template-columns:repeat(3,1fr); }
+  .g4 { grid-template-columns:repeat(4,1fr); }
+  @media (max-width:760px){ .g2,.g3,.g4 { grid-template-columns:1fr; } }
+  .card {
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    border:1px solid var(--line); border-radius:14px; padding:18px 18px 16px;
+  }
+  .card h4 { margin:0 0 8px; font-size:15.5px; font-weight:700; color:var(--ink); letter-spacing:.3px; display:flex; align-items:center; gap:9px; }
+  .card p { margin:6px 0; font-size:14.5px; color:var(--ink-soft); }
+  .card .tag { font-size:11px; letter-spacing:1.2px; text-transform:uppercase; color:var(--cyan); font-weight:700; }
+  .ico { width:26px; height:26px; border-radius:7px; display:inline-grid; place-items:center; font-size:14px; flex:0 0 auto; background:rgba(54,209,216,.12); border:1px solid rgba(54,209,216,.3); }
+
+  /* ---- element chips ---- */
+  .wheel { display:flex; flex-wrap:wrap; gap:9px; margin:12px 0 4px; }
+  .chip { display:inline-flex; align-items:center; gap:8px; padding:6px 12px 6px 9px; border-radius:999px; font-size:13.5px; font-weight:600; border:1px solid var(--line-hi); background:var(--panel); }
+  .chip .dot { width:11px; height:11px; border-radius:50%; box-shadow:0 0 8px currentColor; }
+  .chip.meta { border-style:dashed; color:var(--orange-soft); border-color:rgba(255,138,61,.45); background:rgba(255,138,61,.07); }
+  .wheel-label { font-size:11.5px; letter-spacing:1.6px; text-transform:uppercase; color:var(--ink-dim); font-weight:700; margin:16px 0 2px; }
+  .flow { color:var(--ink-dim); font-size:13px; margin-top:6px; }
+
+  /* ---- tier ladder ---- */
+  .tiers { display:flex; flex-wrap:wrap; gap:7px; align-items:center; margin:6px 0 2px; }
+  .tier { font-weight:800; font-size:13px; letter-spacing:.5px; padding:6px 13px; border-radius:8px; color:#0a0e14; }
+  .tier.arrow { background:none; color:var(--ink-dim); font-weight:400; padding:6px 2px; }
+
+  /* ---- two-layer split ---- */
+  .split { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:760px){ .split { grid-template-columns:1fr; } }
+  .layer { border:1px solid var(--line); border-radius:14px; padding:18px; background:var(--panel); }
+  .layer.active { border-color:rgba(255,138,61,.4); background:linear-gradient(180deg, rgba(255,138,61,.06), var(--panel)); }
+  .layer.owned  { border-color:rgba(54,209,216,.4); background:linear-gradient(180deg, rgba(54,209,216,.06), var(--panel)); }
+  .layer .lh { font-weight:800; font-size:15px; letter-spacing:.3px; margin-bottom:4px; }
+  .layer.active .lh { color:var(--orange-soft); }
+  .layer.owned .lh { color:var(--cyan-soft); }
+  .layer .ls { font-size:12px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:1.4px; margin-bottom:10px; }
+  .layer p { font-size:14.5px; color:var(--ink-soft); margin:8px 0; }
+
+  /* ---- callout ---- */
+  .callout { border:1px solid var(--line-hi); border-left:3px solid var(--orange); border-radius:10px; padding:16px 18px; background:rgba(255,138,61,.05); margin:18px 0; }
+  .callout.cyan { border-left-color:var(--cyan); background:rgba(54,209,216,.05); }
+  .callout.void { border-left-color:var(--void); background:rgba(176,123,255,.05); }
+  .callout .ct { font-weight:700; font-size:13px; letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
+  .callout.cyan .ct { color:var(--cyan-soft); } .callout .ct { color:var(--orange-soft); } .callout.void .ct { color:var(--void); }
+  .callout p { margin:6px 0; font-size:14.5px; color:var(--ink-soft); }
+
+  /* ---- tables ---- */
+  .tbl-wrap { overflow-x:auto; margin:14px 0; border:1px solid var(--line); border-radius:12px; }
+  table { border-collapse:collapse; width:100%; font-size:14px; min-width:480px; }
+  th,td { padding:10px 13px; text-align:left; border-bottom:1px solid var(--line); }
+  thead th { background:var(--panel-3); color:var(--ink); font-weight:700; font-size:12.5px; letter-spacing:.6px; text-transform:uppercase; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:hover { background:rgba(54,209,216,.04); }
+  td.n { font-variant-numeric:tabular-nums; color:var(--cyan-soft); font-weight:600; }
+  .cur { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.6px; padding:2px 8px; border-radius:6px; }
+  .cur.stone { background:rgba(124,231,236,.14); color:var(--cyan-soft); }
+  .cur.ess { background:rgba(143,224,74,.14); color:var(--siege); }
+  .cur.dia { background:rgba(176,123,255,.16); color:var(--void); }
+
+  /* ---- pipeline (growth stack) ---- */
+  .pipe { display:flex; flex-wrap:wrap; align-items:stretch; gap:10px; margin:16px 0; }
+  .pstep { flex:1 1 150px; min-width:150px; border:1px solid var(--line); border-radius:11px; padding:13px 14px; background:var(--panel); position:relative; }
+  .pstep .pn { font-size:11px; color:var(--cyan); font-weight:700; letter-spacing:1px; }
+  .pstep .pt { font-weight:700; font-size:14.5px; margin:3px 0; color:var(--ink); }
+  .pstep .pd { font-size:12.5px; color:var(--ink-dim); }
+  .pstep.hi { border-color:rgba(255,138,61,.45); background:linear-gradient(180deg,rgba(255,138,61,.07),var(--panel)); }
+  .pstep.hi .pn { color:var(--orange); }
+
+  ul.clean { margin:10px 0; padding-left:20px; }
+  ul.clean li { margin:7px 0; color:var(--ink-soft); font-size:14.5px; }
+  ul.clean li strong { color:var(--ink); }
+
+  footer { margin-top:80px; padding-top:26px; border-top:1px solid var(--line); color:var(--ink-dim); font-size:13px; text-align:center; }
+  footer .badge { display:inline-block; margin:0 4px 6px; padding:3px 10px; border:1px solid var(--line-hi); border-radius:999px; font-size:11.5px; color:var(--ink-soft); }
+
+  /* ---- EN / VI language switch ---- */
+  .langswitch { position:fixed; top:14px; right:14px; z-index:60; display:flex; gap:3px; padding:3px; background:rgba(10,14,20,.82); border:1px solid var(--line-hi); border-radius:999px; -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
+  .langswitch a { font-size:12px; font-weight:700; letter-spacing:.8px; padding:5px 12px; border-radius:999px; color:var(--ink-dim); border-bottom:none; text-decoration:none; transition:color .12s, background .12s; }
+  .langswitch a.on { background:linear-gradient(180deg,var(--orange),#e0662a); color:#0a0e14; }
+  .langswitch a:not(.on):hover { color:var(--ink); background:var(--panel-2); }
+  @media (max-width:520px){ .langswitch { top:10px; right:10px; } .langswitch a { padding:5px 10px; } }
+
+  /* ---- page switch (Lore ↔ Growth) ---- */
+  .pagenav { position:fixed; top:14px; left:14px; z-index:60; display:flex; gap:3px; padding:3px; background:rgba(10,14,20,.82); border:1px solid var(--line-hi); border-radius:999px; -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
+  .pagenav a { font-size:12px; font-weight:700; letter-spacing:.6px; padding:5px 12px; border-radius:999px; color:var(--ink-dim); border-bottom:none; text-decoration:none; transition:color .12s, background .12s; }
+  .pagenav a.on { background:linear-gradient(180deg,var(--cyan),#1f9aa0); color:#0a0e14; }
+  .pagenav a:not(.on):hover { color:var(--ink); background:var(--panel-2); }
+  @media (max-width:520px){ .pagenav { top:10px; left:10px; } .pagenav a { padding:5px 10px; } }
+</style>
+</head>
+<body>
+
+<nav class="pagenav" aria-label="Page">
+  <a href="index.html">Lore</a>
+  <a href="character-growth.html" class="on">Growth</a>
+</nav>
+
+<nav class="langswitch" aria-label="Language">
+  <a href="character-growth.html" class="on">EN</a>
+  <a href="character-growth-vi.html">VI</a>
+</nav>
+
+<header class="hero">
+  <div class="scanline"></div>
+  <div class="eyebrow">Character System</div>
+  <h1>Build &amp; <span class="amber">Growth</span></h1>
+  <div class="sub">HOLD: Origin Siege</div>
+  <p class="tagline">One character you create — and a build you <em>grow into</em>. Your power is never a creation-time pick; it's the Talents you awaken, the levels you earn, and the loadout you assemble.</p>
+  <div class="stack">
+    <span class="s">Single <b>Character</b></span>
+    <span class="s">Origin <span class="dim">(cosmetic)</span></span>
+    <span class="s">Gender <span class="dim">(cosmetic)</span></span>
+    <span class="s key">First <b>Talent</b></span>
+    <span class="s key"><b>Talents</b> (awakened)</span>
+    <span class="s"><b>Weapon</b></span>
+    <span class="s">Skill <b>Books</b></span>
+    <span class="s">Gear + <b>Seeds</b></span>
+    <span class="s"><b>Shards</b></span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- 0 -->
+  <section id="shape">
+    <div class="kicker"><span class="num">00</span><h2>The shape, in one line</h2></div>
+    <p class="lead">From a hero-collection game (buy pre-authored heroes) → to a <strong>single player-created character who awakens Talents</strong> to gain power. Creation is low-pressure and mostly cosmetic; your <em>build</em> — not a creation pick — defines you. A Path-of-Exile ethos on an action-RPG + base-building loop.</p>
+    <div class="grid g3">
+      <div class="card"><h4><span class="ico">🧬</span>You are one hero</h4><p>No roster, no gacha shop. Everything you invest lands on the same character, so progression compounds instead of scattering.</p></div>
+      <div class="card"><h4><span class="ico">✦</span>Power = your build</h4><p>Talents (awakened affinities), levels, weapon, skills, gear &amp; shards — all grown over time, all re-specable.</p></div>
+      <div class="card"><h4><span class="ico">♻️</span>Nothing is locked</h4><p>The only creation choice is soft: you grow past it. No "solve character creation" anxiety.</p></div>
+    </div>
+  </section>
+
+  <!-- 1 -->
+  <section id="creation">
+    <div class="kicker"><span class="num">01</span><h2>Creation — three steps, one real choice</h2></div>
+    <p class="lead">Two picks are pure flavor; only the third touches mechanics — and even that is soft, because you grow past it.</p>
+    <div class="grid g3">
+      <div class="card">
+        <p class="tag">Step 1 · cosmetic</p>
+        <h4>Origin <span class="dim">(1 of 5)</span></h4>
+        <p>Human · Bio · Xeno · Mecha · Void. <strong>Zero mechanics</strong> — no stat lean, no gating. It themes your <strong>character skin</strong> and your whole <strong>base</strong> (walls, turrets, skybox), plus your seat in the lore coalition.</p>
+      </div>
+      <div class="card">
+        <p class="tag">Step 2 · cosmetic</p>
+        <h4>Gender <span class="dim">(F / M)</span></h4>
+        <p>A body/proportion swap on one shared, retargeted rig. Purely visual.</p>
+      </div>
+      <div class="card" style="border-color:rgba(255,138,61,.4);">
+        <p class="tag" style="color:var(--orange-soft)">Step 3 · the build pick</p>
+        <h4>First Talent</h4>
+        <p>Pick any one <strong>element</strong> or <strong>Summon</strong>, free. The pick is <em>which</em> Talent — its <strong>tier is a bounded gamble, random D→S</strong>. Most land low; a lucky roll lands S.</p>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="ct">Creation roll ≠ endgame roll</div>
+      <p>The First-Talent tier is capped at <strong>S</strong> — <strong>SS / SSS</strong> exist only through the full Awakening loop (§03). Creation never front-loads endgame power; the ceiling stays a goal you play toward. Pick <strong>Summon</strong> and you're bootstrapped with one weak D-tier starter creature, so the tamer path is playable from minute one.</p>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section id="talents">
+    <div class="kicker"><span class="num">02</span><h2>Talents — the identity &amp; power engine</h2></div>
+    <p class="lead">A <strong>Talent</strong> is an awakened affinity. There are <strong>11</strong>: ten elements across two independent rock-paper-scissors wheels, plus the elementless <strong>Summon</strong> meta-Talent.</p>
+
+    <div class="wheel-label">Nature wheel — 7-cycle (each beats the next)</div>
+    <div class="wheel">
+      <span class="chip"><span class="dot" style="color:var(--e-earth)"></span>Earth</span>
+      <span class="chip"><span class="dot" style="color:var(--e-electric)"></span>Electric</span>
+      <span class="chip"><span class="dot" style="color:var(--e-water)"></span>Water</span>
+      <span class="chip"><span class="dot" style="color:var(--e-fire)"></span>Fire</span>
+      <span class="chip"><span class="dot" style="color:var(--e-ice)"></span>Ice</span>
+      <span class="chip"><span class="dot" style="color:var(--e-wind)"></span>Wind</span>
+      <span class="chip"><span class="dot" style="color:var(--e-poison)"></span>Poison</span>
+    </div>
+    <div class="flow">Earth → Electric → Water → Fire → Ice → Wind → Poison → (Earth)</div>
+
+    <div class="wheel-label">Celestial wheel — 3-cycle (each beats the next)</div>
+    <div class="wheel">
+      <span class="chip"><span class="dot" style="color:var(--e-light)"></span>Light</span>
+      <span class="chip"><span class="dot" style="color:var(--e-dark)"></span>Dark</span>
+      <span class="chip"><span class="dot" style="color:var(--e-twilight)"></span>Twilight</span>
+      <span class="chip meta">✦ Summon <span class="dim" style="font-weight:400">— not an element</span></span>
+    </div>
+    <div class="flow">Light → Dark → Twilight → (Light) &nbsp;·&nbsp; the two wheels never cross-affinity</div>
+
+    <h3>Every owned Talent has a tier</h3>
+    <div class="tiers">
+      <span class="tier" style="background:var(--t-d)">D</span><span class="tier arrow">→</span>
+      <span class="tier" style="background:var(--t-c)">C</span><span class="tier arrow">→</span>
+      <span class="tier" style="background:var(--t-b)">B</span><span class="tier arrow">→</span>
+      <span class="tier" style="background:var(--t-a);color:#fff">A</span><span class="tier arrow">→</span>
+      <span class="tier" style="background:var(--t-s)">S</span><span class="tier arrow">→</span>
+      <span class="tier" style="background:var(--t-ss)">SS</span><span class="tier arrow">→</span>
+      <span class="tier" style="background:var(--t-sss)">SSS</span>
+    </div>
+
+    <h3>The key mechanic — two layers of effect</h3>
+    <div class="split">
+      <div class="layer active">
+        <div class="lh">Active / Present Talent</div>
+        <div class="ls">One at a time</div>
+        <p>The Talent you equip drives your <strong>identity icon</strong>, your <strong>global stats</strong> (its tier scales HP + Attack growth), and which <strong>battlefield Domain</strong> buff/debuff applies to you.</p>
+        <p class="dim">Swap freely — out of combat.</p>
+      </div>
+      <div class="layer owned">
+        <div class="lh">Owned Talents</div>
+        <div class="ls">All of them, always on</div>
+        <p>Your whole awakened library. Each element's <strong>skill power</strong> is boosted by <em>that element's</em> owned tier — regardless of what's currently active.</p>
+        <p class="dim">More Talents = a deeper spell library, not a bigger stat number.</p>
+      </div>
+    </div>
+    <div class="callout cyan">
+      <div class="ct">Worked example</div>
+      <p>Active = <strong>Ice</strong> (Ice icon; Ice tier feeds your stats). You also own <strong>Fire SSS</strong>. You can still cast Fire skills — boosted by that owned Fire SSS. → <em>"a Fire nuker wearing an Ice stat-suit."</em> Global stats come from exactly <strong>one</strong> active Talent, so awakening more never balloons your raw numbers.</p>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section id="awakening">
+    <div class="kicker"><span class="num">03</span><h2>Awakening — the growth loop</h2></div>
+    <p class="lead">The game's primary progression sink. You <strong>Awaken</strong> new Talents and <strong>Upgrade</strong> their tiers by spending three currencies. Breadth is cheap; height is the grind.</p>
+
+    <div class="grid g3">
+      <div class="card"><h4>Awaken</h4><p>Roll a <em>new</em> Talent's starting tier (weighted RNG). Fuelled by <span class="cur stone">Awakening Stones</span> — gameplay drops, so F2P can collect elements.</p></div>
+      <div class="card"><h4>Upgrade</h4><p>Raise an owned Talent one tier at a time — still RNG, with <strong>soft pity</strong>. Fuelled by <span class="cur ess">Essence</span>.</p></div>
+      <div class="card"><h4>Reroll</h4><p>Re-gamble a Talent's whole tier for <span class="cur dia">Diamond</span> — <strong>can drop</strong> as well as rise. The whale sink / accelerator.</p></div>
+    </div>
+
+    <h3>① The Awaken gamble — tier-roll weights</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Tier</th><th>D</th><th>C</th><th>B</th><th>A</th><th>S</th><th>SS</th><th>SSS</th></tr></thead>
+        <tbody><tr><td>Weight</td><td class="n">40%</td><td class="n">26%</td><td class="n">17%</td><td class="n">10%</td><td class="n">5%</td><td class="n">1.8%</td><td class="n">0.2%</td></tr></tbody>
+      </table>
+    </div>
+    <p class="dim">S-or-better ≈ 7%. SSS ≈ 1-in-500 (a jackpot) — but a low roll is never dead, because Upgrade climbs there. The bounded <strong>creation</strong> roll drops SS/SSS and renormalizes to D 43 / C 28 / B 18 / A 8 / S 3%.</p>
+
+    <h3>② Upgrade success — one tier per attempt</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Step</th><th>D→C</th><th>C→B</th><th>B→A</th><th>A→S</th><th>S→SS</th><th>SS→SSS</th></tr></thead>
+        <tbody><tr><td>Success</td><td class="n">75%</td><td class="n">55%</td><td class="n">38%</td><td class="n">22%</td><td class="n">11%</td><td class="n">4%</td></tr></tbody>
+      </table>
+    </div>
+    <p class="dim">A failed attempt consumes materials, tier unchanged — but <strong>soft pity adds +5% per fail</strong> and resets on success, so high tiers <em>grind</em> instead of <em>rage</em>.</p>
+
+    <div class="callout void">
+      <div class="ct">Design intent</div>
+      <p><strong>Breadth is cheap</strong> — collect elements through play. <strong>Height is the money &amp; grind</strong> — high tiers eat Essence and Reroll Diamond. There's <strong>no owned-count cap</strong>: eventually own all 11, because the endgame is <em>tier, not count</em>. The demand engine that makes you want breadth is Domains (§04).</p>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section id="domains">
+    <div class="kicker"><span class="num">04</span><h2>Battlefield Domains — the tactical payoff</h2></div>
+    <p class="lead">A battlefield can carry an <strong>element Domain</strong>: it empowers one element and suppresses another — reaching <strong>your side only</strong> (you + your summons; enemies are unaffected).</p>
+    <div class="grid g2">
+      <div class="card"><h4><span class="ico">▲</span>Empowered element</h4><p>Your matching <strong>active Talent</strong> gains a stat package (layer 1), and your <strong>skills + summons of that element</strong> deal ~+30% (layer 2).</p></div>
+      <div class="card"><h4><span class="ico">▼</span>Suppressed element</h4><p>Its stat package flips to a penalty, and that element's damage is cut ~−30%. Thematically the empowered element's opposite.</p></div>
+    </div>
+    <div class="callout">
+      <div class="ct">The tension it creates</div>
+      <p>Active Talent can't swap mid-fight, and Domains <strong>telegraph before you enter</strong>. So tonight's Water Domain forces a choice: run <strong>Water active</strong> (weak Water-tier stats, but the Domain buff) or your <strong>Fire SSS active</strong> (great stats, no buff — and a penalty if Fire is suppressed)? → The winning answer is to own a <strong>broad, high-tier portfolio</strong> and align per battlefield. <em>That's</em> why the Awakening economy has demand. The Base Scene even runs a rotating <strong>daily</strong> Domain as an optional live-ops ritual.</p>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section id="leveling">
+    <div class="kicker"><span class="num">05</span><h2>Leveling — XP you earn, never buy directly</h2></div>
+    <p class="lead">Kills grant per-mob XP → XP accumulates → your <strong>level is derived from XP</strong>. The server validates every claim against the wave composition it owns, so per-mob granularity stays cheat-proof.</p>
+    <ul class="clean">
+      <li><strong>Level from XP.</strong> Smooth superlinear curve, hard max <strong>150</strong>, banded 50-per-band. Only <strong>HP + Attack</strong> scale with level; the rest stay flat.</li>
+      <li><strong>Band gate.</strong> XP earned past your unlocked cap is <strong>banked, not lost</strong> — it applies the instant the band-unlock gamble succeeds.</li>
+      <li><strong>Diamonds buy XP books</strong>, not levels directly — the only diamond→level path.</li>
+      <li><strong>Death isn't a fail state.</strong> Respawn is unlimited, gated by a per-respawn <strong>cooldown</strong> — the cooldown <em>is</em> the penalty, so XP accrues continuously.</li>
+    </ul>
+  </section>
+
+  <!-- 6 -->
+  <section id="stack">
+    <div class="kicker"><span class="num">06</span><h2>The growth stack — how it all layers</h2></div>
+    <p class="lead">Every source resolves into two clean channels: your <strong>global stats</strong> and your <strong>skill power</strong>. They never double-count each other.</p>
+
+    <h3>Global stats (HP + Attack)</h3>
+    <div class="pipe">
+      <div class="pstep"><div class="pn">BASE</div><div class="pt">Uniform base</div><div class="pd">Same for everyone (Origin is cosmetic)</div></div>
+      <div class="pstep hi"><div class="pn">×</div><div class="pt">Active Talent tier</div><div class="pd">D…SSS growth multiplier</div></div>
+      <div class="pstep"><div class="pn">×</div><div class="pt">Level scaling</div><div class="pd">HP + Attack per level</div></div>
+      <div class="pstep"><div class="pn">×</div><div class="pt">Gear / Shard / Tuning</div><div class="pd">Equipped modifiers</div></div>
+      <div class="pstep"><div class="pn">×</div><div class="pt">Domain (layer 1)</div><div class="pd">If active element is empowered/suppressed</div></div>
+    </div>
+
+    <h3>Skill power (per cast)</h3>
+    <div class="pipe">
+      <div class="pstep"><div class="pn">BASE</div><div class="pt">Skill base</div><div class="pd">The skill's own numbers</div></div>
+      <div class="pstep hi"><div class="pn">×</div><div class="pt">Owned tier of its element</div><div class="pd">D…SSS — your library depth</div></div>
+      <div class="pstep"><div class="pn">×</div><div class="pt">Weapon match</div><div class="pd">family 1.0 · exact-type +1 level</div></div>
+      <div class="pstep"><div class="pn">×</div><div class="pt">Empower + gear/shard</div><div class="pd">Soul burst · modifiers</div></div>
+      <div class="pstep"><div class="pn">×</div><div class="pt">Domain (layer 2)</div><div class="pd">Element-keyed empower/suppress</div></div>
+    </div>
+    <p class="dim">The <span style="color:var(--orange-soft)">amber</span> steps are where Talents pay off: <strong>active tier</strong> lifts your stats, <strong>owned tier</strong> lifts each element's skills. Awaken wide → more spells scale; Upgrade tall → each scales harder.</p>
+  </section>
+
+  <!-- 7 -->
+  <section id="axes">
+    <div class="kicker"><span class="num">07</span><h2>The supporting axes</h2></div>
+    <p class="lead">Talents are the engine; these are what you point it through.</p>
+    <div class="grid g2">
+      <div class="card">
+        <h4><span class="ico">⚔️</span>Weapon</h4>
+        <p>One axis replacing the old melee/ranged + physic/magic split — <strong>30 weapons in 4 quadrants</strong>, freely swapped gear. Each encodes range, which defense it checks, and a signature twist.</p>
+        <p><strong>Your equipped weapon selects which Skill Books are live</strong> — swap Staff→Sword and a different kit lights up. Same-family works; exact-type match gives +1 skill level.</p>
+      </div>
+      <div class="card">
+        <h4><span class="ico">📖</span>Skills — Books &amp; Seeds</h4>
+        <p><strong>Q / W / E / R</strong> = four Skill Books you slot (weapon-gated, Talent-powered) — your piloted kit. <strong>Seeds</strong> socket into gear and auto-cast on their own heuristic.</p>
+        <p><strong>T — Empower</strong> spends <strong>Soul</strong> to supercharge the next cast; an innate passive regenerates Soul; <strong>Space — Dash</strong> is universal.</p>
+      </div>
+      <div class="card">
+        <h4><span class="ico">🐾</span>Summon pillar</h4>
+        <p>The tamer path: <strong>capture → summon → grow → evolve</strong> a roster of persistent creatures. Their stats are <strong>character-independent</strong> (species × level × evolution × Summon tier), so investing in them genuinely matters.</p>
+        <p>Fielding costs <strong>Soul reservation</strong> (the same pool Empower uses — a wide army starves your burst) plus <strong>HP-drain</strong> upkeep. No hard cap: field as many as you can sustain.</p>
+      </div>
+      <div class="card">
+        <h4><span class="ico">💠</span>Gear &amp; Shards</h4>
+        <p><strong>10 gear slots</strong> (5 offense / 5 defense), each a rolled instance with a Seed socket. <strong>10 element-colored Shard slots</strong> — one per element (Neutral retired, <span style="color:var(--e-twilight)">Twilight</span> added).</p>
+        <p>Your hero uses all 10; captured creatures equip an <strong>element-locked subset</strong> from the same shared pool — so allocation is a real choice.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>
+      <span class="badge">Source: character-system-redesign.md</span>
+      <span class="badge">leveling-xp-design.md</span>
+      <span class="badge">character-design.md</span>
+    </div>
+    <p style="margin-top:12px">HOLD: Origin Siege — character build &amp; growth overview. Design status: locked; residual is tuning, art &amp; implementation. Numbers are first-pass and server-tunable.</p>
+  </footer>
+
+</div>
+</body>
+</html>

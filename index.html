@@ -224,6 +224,13 @@
   a { color: var(--cyan); }
   ::selection { background: rgba(54,209,216,.3); color:#fff; }
 
+  /* ---- Page nav (Lore ↔ Growth) ---- */
+  .pagenav { position:fixed; top:14px; left:14px; z-index:60; display:flex; gap:3px; padding:3px; background:rgba(10,14,20,.82); border:1px solid var(--line); border-radius:999px; -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
+  .pagenav a { font-size:12px; font-weight:700; letter-spacing:.6px; padding:5px 12px; border-radius:999px; color:var(--ink-dim); text-decoration:none; transition:color .12s, background .12s; }
+  .pagenav a.on { background:linear-gradient(180deg,var(--cyan),#1f9aa0); color:#0a0e14; }
+  .pagenav a:not(.on):hover { color:var(--ink); background:var(--panel-2); }
+  @media (max-width:520px){ .pagenav { top:10px; left:10px; } .pagenav a { padding:5px 10px; } }
+
   @media (max-width:560px){
     body{ font-size:16px; }
     .tbl, .tbl tbody, .tbl tr, .tbl td { display:block; width:100%; }
@@ -235,6 +242,11 @@
 </style>
 </head>
 <body>
+
+<nav class="pagenav" aria-label="Trang">
+  <a href="index.html" class="on">Cốt Truyện</a>
+  <a href="character-growth-vi.html">Phát Triển</a>
+</nav>
 
 <header class="hero">
   <div class="scanline"></div>

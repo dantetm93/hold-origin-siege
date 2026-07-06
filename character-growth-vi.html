@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOLD: Origin Siege — Xây Dựng &amp; Phát Triển Nhân Vật</title>
+<meta name="description" content="Cách xây dựng và phát triển nhân vật trong HOLD: Origin Siege — một nhân vật tự tạo, Thiên Phú thức tỉnh, mô hình sức mạnh hai tầng, kinh tế Thức Tỉnh, Lãnh Địa, lên cấp và trụ cột Triệu Hồi.">
+<style>
+  /* Tomorrow tự host (đủ bộ ký tự tiếng Việt U+1EA0–U+1EF9). */
+  @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:300; font-display:swap; src:url(fonts/Tomorrow-300.woff2) format("woff2"); }
+  @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:400; font-display:swap; src:url(fonts/Tomorrow-400.woff2) format("woff2"); }
+  @font-face { font-family:"Tomorrow"; font-style:italic; font-weight:400; font-display:swap; src:url(fonts/Tomorrow-400italic.woff2) format("woff2"); }
+  @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:500; font-display:swap; src:url(fonts/Tomorrow-500.woff2) format("woff2"); }
+  @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:600; font-display:swap; src:url(fonts/Tomorrow-600.woff2) format("woff2"); }
+  @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:700; font-display:swap; src:url(fonts/Tomorrow-700.woff2) format("woff2"); }
+  @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:900; font-display:swap; src:url(fonts/Tomorrow-900.woff2) format("woff2"); }
+  :root {
+    --bg:#0a0e14; --bg-2:#0e141d; --panel:#121a25; --panel-2:#16202d; --panel-3:#1b2735;
+    --ink:#d8e2ec; --ink-soft:#93a4b6; --ink-dim:#62748a;
+    --steel:#2a3b4d; --line:#233141; --line-hi:#2f4358;
+    --cyan:#36d1d8; --cyan-soft:#7ce7ec;
+    --orange:#ff8a3d; --orange-soft:#ffb27a;
+    --void:#b07bff; --siege:#8fe04a;
+    /* bảng màu nguyên tố — 1:1 với UITheme.ElementColor */
+    --e-earth:#8c6638; --e-electric:#f2d940; --e-water:#4d99f2; --e-fire:#f26633;
+    --e-ice:#8cd9f2; --e-wind:#8ce6a6; --e-poison:#8ccc40; --e-light:#fff2b3;
+    --e-dark:#8c59bf; --e-twilight:#c25fa0;
+    /* thang bậc */
+    --t-d:#7c8a99; --t-c:#8fe04a; --t-b:#36d1d8; --t-a:#b07bff; --t-s:#ff8a3d; --t-ss:#ffd24a; --t-sss:#ff6fb0;
+    --maxw:960px;
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    margin:0;
+    background:
+      radial-gradient(1200px 700px at 50% -220px, rgba(54,209,216,.10), transparent 60%),
+      radial-gradient(900px 600px at 92% 6%, rgba(255,138,61,.06), transparent 55%),
+      radial-gradient(900px 720px at 4% 42%, rgba(176,123,255,.06), transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    font-family:"Tomorrow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight:400; line-height:1.7; font-size:16.5px; letter-spacing:.1px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap { max-width:var(--maxw); margin:0 auto; padding:0 22px 120px; }
+  a { color:var(--cyan-soft); text-decoration:none; border-bottom:1px solid rgba(124,231,236,.25); }
+  a:hover { border-bottom-color:var(--cyan-soft); }
+
+  header.hero {
+    position:relative; text-align:center; padding:86px 22px 60px; overflow:hidden;
+    border-bottom:1px solid var(--line);
+    background:
+      linear-gradient(180deg, rgba(18,26,37,0), rgba(10,14,20,.6)),
+      repeating-linear-gradient(115deg, rgba(54,209,216,.035) 0 2px, transparent 2px 26px);
+  }
+  .hero .eyebrow { font-weight:700; letter-spacing:6px; font-size:12px; color:var(--cyan); text-transform:uppercase; margin-bottom:16px; }
+  .hero h1 {
+    font-weight:900; font-size:clamp(32px,6.6vw,62px); line-height:1.02; margin:0;
+    background:linear-gradient(180deg,#fff 0%, var(--cyan-soft) 60%, var(--cyan) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 0 38px rgba(54,209,216,.22);
+  }
+  .hero h1 .amber { background:linear-gradient(180deg,#fff 0%, var(--orange-soft) 60%, var(--orange) 100%); -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:0 0 38px rgba(255,138,61,.20); }
+  .hero .sub { margin-top:16px; font-size:clamp(14px,2.6vw,18px); color:var(--ink-soft); font-weight:500; letter-spacing:2px; text-transform:uppercase; }
+  .hero .tagline { max-width:680px; margin:24px auto 0; color:var(--ink); font-size:clamp(15px,2.4vw,18px); font-style:italic; font-weight:300; }
+  .scanline { position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(180deg, rgba(255,255,255,.012) 0 1px, transparent 1px 3px); mix-blend-mode:overlay; }
+
+  .stack { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; max-width:800px; margin:30px auto 0; }
+  .stack .s { font-size:12.5px; letter-spacing:.4px; padding:6px 12px; border:1px solid var(--line-hi); border-radius:999px; background:var(--panel); color:var(--ink-soft); }
+  .stack .s b { color:var(--ink); font-weight:600; }
+  .stack .s.key { border-color:rgba(255,138,61,.5); background:rgba(255,138,61,.08); color:var(--orange-soft); }
+
+  section { margin-top:64px; scroll-margin-top:20px; }
+  .kicker { display:flex; align-items:baseline; gap:14px; margin-bottom:8px; }
+  .num { color:var(--cyan); font-weight:700; font-size:14px; letter-spacing:2px; }
+  h2 { font-weight:800; font-size:clamp(21px,3.4vw,29px); margin:0; line-height:1.18; letter-spacing:.2px; }
+  .lead { color:var(--ink-soft); font-size:16px; margin:8px 0 20px; max-width:72ch; }
+  h3 { font-weight:700; font-size:17px; margin:26px 0 10px; color:var(--ink); letter-spacing:.2px; }
+  p { margin:12px 0; }
+  strong { color:#eaf1f8; font-weight:600; }
+  .dim { color:var(--ink-dim); }
+
+  .grid { display:grid; gap:16px; }
+  .g2 { grid-template-columns:repeat(2,1fr); }
+  .g3 { grid-template-columns:repeat(3,1fr); }
+  .g4 { grid-template-columns:repeat(4,1fr); }
+  @media (max-width:760px){ .g2,.g3,.g4 { grid-template-columns:1fr; } }
+  .card { background:linear-gradient(180deg,var(--panel-2),var(--panel)); border:1px solid var(--line); border-radius:14px; padding:18px 18px 16px; }
+  .card h4 { margin:0 0 8px; font-size:15.5px; font-weight:700; color:var(--ink); letter-spacing:.3px; display:flex; align-items:center; gap:9px; }
+  .card p { margin:6px 0; font-size:14.5px; color:var(--ink-soft); }
+  .card .tag { font-size:11px; letter-spacing:1.2px; text-transform:uppercase; color:var(--cyan); font-weight:700; }
+  .ico { width:26px; height:26px; border-radius:7px; display:inline-grid; place-items:center; font-size:14px; flex:0 0 auto; background:rgba(54,209,216,.12); border:1px solid rgba(54,209,216,.3); }
+
+  .wheel { display:flex; flex-wrap:wrap; gap:9px; margin:12px 0 4px; }
+  .chip { display:inline-flex; align-items:center; gap:8px; padding:6px 12px 6px 9px; border-radius:999px; font-size:13.5px; font-weight:600; border:1px solid var(--line-hi); background:var(--panel); }
+  .chip .dot { width:11px; height:11px; border-radius:50%; box-shadow:0 0 8px currentColor; }
+  .chip.meta { border-style:dashed; color:var(--orange-soft); border-color:rgba(255,138,61,.45); background:rgba(255,138,61,.07); }
+  .wheel-label { font-size:11.5px; letter-spacing:1.6px; text-transform:uppercase; color:var(--ink-dim); font-weight:700; margin:16px 0 2px; }
+  .flow { color:var(--ink-dim); font-size:13px; margin-top:6px; }
+
+  .tiers { display:flex; flex-wrap:wrap; gap:7px; align-items:center; margin:6px 0 2px; }
+  .tier { font-weight:800; font-size:13px; letter-spacing:.5px; padding:6px 13px; border-radius:8px; color:#0a0e14; }
+  .tier.arrow { background:none; color:var(--ink-dim); font-weight:400; padding:6px 2px; }
+
+  .split { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:760px){ .split { grid-template-columns:1fr; } }
+  .layer { border:1px solid var(--line); border-radius:14px; padding:18px; background:var(--panel); }
+  .layer.active { border-color:rgba(255,138,61,.4); background:linear-gradient(180deg, rgba(255,138,61,.06), var(--panel)); }
+  .layer.owned  { border-color:rgba(54,209,216,.4); background:linear-gradient(180deg, rgba(54,209,216,.06), var(--panel)); }
+  .layer .lh { font-weight:800; font-size:15px; letter-spacing:.3px; margin-bottom:4px; }
+  .layer.active .lh { color:var(--orange-soft); }
+  .layer.owned .lh { color:var(--cyan-soft); }
+  .layer .ls { font-size:12px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:1.4px; margin-bottom:10px; }
+  .layer p { font-size:14.5px; color:var(--ink-soft); margin:8px 0; }
+
+  .callout { border:1px solid var(--line-hi); border-left:3px solid var(--orange); border-radius:10px; padding:16px 18px; background:rgba(255,138,61,.05); margin:18px 0; }
+  .callout.cyan { border-left-color:var(--cyan); background:rgba(54,209,216,.05); }
+  .callout.void { border-left-color:var(--void); background:rgba(176,123,255,.05); }
+  .callout .ct { font-weight:700; font-size:13px; letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
+  .callout.cyan .ct { color:var(--cyan-soft); } .callout .ct { color:var(--orange-soft); } .callout.void .ct { color:var(--void); }
+  .callout p { margin:6px 0; font-size:14.5px; color:var(--ink-soft); }
+
+  .tbl-wrap { overflow-x:auto; margin:14px 0; border:1px solid var(--line); border-radius:12px; }
+  table { border-collapse:collapse; width:100%; font-size:14px; min-width:480px; }
+  th,td { padding:10px 13px; text-align:left; border-bottom:1px solid var(--line); }
+  thead th { background:var(--panel-3); color:var(--ink); font-weight:700; font-size:12.5px; letter-spacing:.6px; text-transform:uppercase; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:hover { background:rgba(54,209,216,.04); }
+  td.n { font-variant-numeric:tabular-nums; color:var(--cyan-soft); font-weight:600; }
+  .cur { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.6px; padding:2px 8px; border-radius:6px; }
+  .cur.stone { background:rgba(124,231,236,.14); color:var(--cyan-soft); }
+  .cur.ess { background:rgba(143,224,74,.14); color:var(--siege); }
+  .cur.dia { background:rgba(176,123,255,.16); color:var(--void); }
+
+  .pipe { display:flex; flex-wrap:wrap; align-items:stretch; gap:10px; margin:16px 0; }
+  .pstep { flex:1 1 160px; min-width:160px; border:1px solid var(--line); border-radius:11px; padding:13px 14px; background:var(--panel); position:relative; }
+  .pstep .pn { font-size:11px; color:var(--cyan); font-weight:700; letter-spacing:1px; }
+  .pstep .pt { font-weight:700; font-size:14.5px; margin:3px 0; color:var(--ink); }
+  .pstep .pd { font-size:12.5px; color:var(--ink-dim); }
+  .pstep.hi { border-color:rgba(255,138,61,.45); background:linear-gradient(180deg,rgba(255,138,61,.07),var(--panel)); }
+  .pstep.hi .pn { color:var(--orange); }
+
+  ul.clean { margin:10px 0; padding-left:20px; }
+  ul.clean li { margin:7px 0; color:var(--ink-soft); font-size:14.5px; }
+  ul.clean li strong { color:var(--ink); }
+
+  footer { margin-top:80px; padding-top:26px; border-top:1px solid var(--line); color:var(--ink-dim); font-size:13px; text-align:center; }
+  footer .badge { display:inline-block; margin:0 4px 6px; padding:3px 10px; border:1px solid var(--line-hi); border-radius:999px; font-size:11.5px; color:var(--ink-soft); }
+
+  /* ---- chuyển ngôn ngữ EN / VI ---- */
+  .langswitch { position:fixed; top:14px; right:14px; z-index:60; display:flex; gap:3px; padding:3px; background:rgba(10,14,20,.82); border:1px solid var(--line-hi); border-radius:999px; -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
+  .langswitch a { font-size:12px; font-weight:700; letter-spacing:.8px; padding:5px 12px; border-radius:999px; color:var(--ink-dim); border-bottom:none; text-decoration:none; transition:color .12s, background .12s; }
+  .langswitch a.on { background:linear-gradient(180deg,var(--orange),#e0662a); color:#0a0e14; }
+  .langswitch a:not(.on):hover { color:var(--ink); background:var(--panel-2); }
+  @media (max-width:520px){ .langswitch { top:10px; right:10px; } .langswitch a { padding:5px 10px; } }
+
+  /* ---- chuyển trang (Cốt Truyện ↔ Phát Triển) ---- */
+  .pagenav { position:fixed; top:14px; left:14px; z-index:60; display:flex; gap:3px; padding:3px; background:rgba(10,14,20,.82); border:1px solid var(--line-hi); border-radius:999px; -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
+  .pagenav a { font-size:12px; font-weight:700; letter-spacing:.6px; padding:5px 12px; border-radius:999px; color:var(--ink-dim); border-bottom:none; text-decoration:none; transition:color .12s, background .12s; }
+  .pagenav a.on { background:linear-gradient(180deg,var(--cyan),#1f9aa0); color:#0a0e14; }
+  .pagenav a:not(.on):hover { color:var(--ink); background:var(--panel-2); }
+  @media (max-width:520px){ .pagenav { top:10px; left:10px; } .pagenav a { padding:5px 10px; } }
+</style>
+</head>
+<body>
+
+<nav class="pagenav" aria-label="Trang">
+  <a href="index.html">Cốt Truyện</a>
+  <a href="character-growth-vi.html" class="on">Phát Triển</a>
+</nav>
+
+<nav class="langswitch" aria-label="Ngôn ngữ">
+  <a href="character-growth.html">EN</a>
+  <a href="character-growth-vi.html" class="on">VI</a>
+</nav>
+
+<header class="hero">
+  <div class="scanline"></div>
+  <div class="eyebrow">Hệ Thống Nhân Vật</div>
+  <h1>Xây Dựng &amp; <span class="amber">Phát Triển</span></h1>
+  <div class="sub">HOLD: Origin Siege</div>
+  <p class="tagline">Một nhân vật do bạn tự tạo — và một lối chơi bạn <em>nuôi lớn dần</em>. Sức mạnh không bao giờ là lựa chọn lúc tạo nhân vật; nó đến từ Thiên Phú bạn thức tỉnh, cấp độ bạn cày, và bộ trang bị bạn lắp ráp.</p>
+  <div class="stack">
+    <span class="s">Một <b>Nhân Vật</b></span>
+    <span class="s">Nguồn Gốc <span class="dim">(ngoại hình)</span></span>
+    <span class="s">Giới Tính <span class="dim">(ngoại hình)</span></span>
+    <span class="s key"><b>Thiên Phú</b> Đầu Tiên</span>
+    <span class="s key"><b>Thiên Phú</b> (thức tỉnh)</span>
+    <span class="s"><b>Vũ Khí</b></span>
+    <span class="s"><b>Sách Kỹ Năng</b></span>
+    <span class="s">Trang Bị + <b>Hạt Giống</b></span>
+    <span class="s"><b>Mảnh Ghép</b></span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- 0 -->
+  <section id="shape">
+    <div class="kicker"><span class="num">00</span><h2>Tổng thể trong một câu</h2></div>
+    <p class="lead">Từ game sưu tập anh hùng (mua hero dựng sẵn) → thành <strong>một nhân vật do người chơi tự tạo, thức tỉnh Thiên Phú</strong> để mạnh lên. Tạo nhân vật nhẹ nhàng và chủ yếu là ngoại hình; chính <em>lối xây dựng</em> — chứ không phải lựa chọn ban đầu — mới định hình bạn. Triết lý kiểu Path of Exile trên nền action-RPG kèm xây căn cứ.</p>
+    <div class="grid g3">
+      <div class="card"><h4><span class="ico">🧬</span>Bạn là một nhân vật</h4><p>Không đội hình, không gacha. Mọi đầu tư đều đổ vào cùng một nhân vật, nên tiến trình dồn tụ thay vì bị phân mảnh.</p></div>
+      <div class="card"><h4><span class="ico">✦</span>Sức mạnh = lối xây dựng</h4><p>Thiên Phú (ái lực đã thức tỉnh), cấp độ, vũ khí, kỹ năng, trang bị &amp; mảnh — đều nuôi dần theo thời gian, đều đổi lại được.</p></div>
+      <div class="card"><h4><span class="ico">♻️</span>Không gì bị khóa cứng</h4><p>Lựa chọn duy nhất lúc tạo cũng chỉ là "mềm": bạn sẽ vượt qua nó. Không còn nỗi lo "phải giải đúng bài tạo nhân vật".</p></div>
+    </div>
+  </section>
+
+  <!-- 1 -->
+  <section id="creation">
+    <div class="kicker"><span class="num">01</span><h2>Tạo nhân vật — ba bước, một lựa chọn thật</h2></div>
+    <p class="lead">Hai bước đầu thuần ngoại hình; chỉ bước thứ ba chạm tới cơ chế — mà cũng "mềm", vì bạn sẽ vượt qua nó.</p>
+    <div class="grid g3">
+      <div class="card">
+        <p class="tag">Bước 1 · ngoại hình</p>
+        <h4>Nguồn Gốc <span class="dim">(1 trong 5)</span></h4>
+        <p>Human · Bio · Xeno · Mecha · Void. <strong>Không cơ chế nào</strong> — không lệch chỉ số, không khóa gì. Nó quyết định <strong>ngoại hình nhân vật</strong> và toàn bộ <strong>căn cứ</strong> (tường, trụ, bầu trời), cùng chỗ đứng của bạn trong liên minh cốt truyện.</p>
+      </div>
+      <div class="card">
+        <p class="tag">Bước 2 · ngoại hình</p>
+        <h4>Giới Tính <span class="dim">(Nữ / Nam)</span></h4>
+        <p>Đổi hình thể/tỉ lệ trên cùng một khung xương dùng chung. Thuần thị giác.</p>
+      </div>
+      <div class="card" style="border-color:rgba(255,138,61,.4);">
+        <p class="tag" style="color:var(--orange-soft)">Bước 3 · lựa chọn xây dựng</p>
+        <h4>Thiên Phú Đầu Tiên</h4>
+        <p>Chọn một <strong>nguyên tố</strong> bất kỳ hoặc <strong>Triệu Hồi</strong>, miễn phí. Bạn chọn <em>Thiên Phú nào</em> — còn <strong>bậc của nó là canh bạc trong khoảng D→S</strong>. Đa số ra bậc thấp; may mắn thì ra S.</p>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="ct">Quay lúc tạo ≠ quay cuối game</div>
+      <p>Bậc Thiên Phú Đầu Tiên bị chặn ở <strong>S</strong> — <strong>SS / SSS</strong> chỉ có qua vòng lặp Thức Tỉnh đầy đủ (§03). Tạo nhân vật không bao giờ dồn sẵn sức mạnh cuối game; trần sức mạnh vẫn là mục tiêu để cày tới. Chọn <strong>Triệu Hồi</strong> thì bạn được tặng một sinh vật khởi đầu bậc D yếu, nên hướng thuần thú chơi được ngay từ phút đầu.</p>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section id="talents">
+    <div class="kicker"><span class="num">02</span><h2>Thiên Phú — cỗ máy bản sắc &amp; sức mạnh</h2></div>
+    <p class="lead">Một <strong>Thiên Phú</strong> là một ái lực đã thức tỉnh. Có <strong>11</strong> Thiên Phú: mười nguyên tố nằm trên hai vòng oản-tù-tì độc lập, cộng với <strong>Triệu Hồi</strong> — Thiên Phú "meta" phi nguyên tố.</p>
+
+    <div class="wheel-label">Vòng Tự Nhiên — 7 nút (mỗi hệ khắc hệ kế tiếp)</div>
+    <div class="wheel">
+      <span class="chip"><span class="dot" style="color:var(--e-earth)"></span>Đất</span>
+      <span class="chip"><span class="dot" style="color:var(--e-electric)"></span>Điện</span>
+      <span class="chip"><span class="dot" style="color:var(--e-water)"></span>Nước</span>
+      <span class="chip"><span class="dot" style="color:var(--e-fire)"></span>Lửa</span>
+      <span class="chip"><span class="dot" style="color:var(--e-ice)"></span>Băng</span>
+      <span class="chip"><span class="dot" style="color:var(--e-wind)"></span>Gió</span>
+      <span class="chip"><span class="dot" style="color:var(--e-poison)"></span>Độc</span>
+    </div>
+    <div class="flow">Đất → Điện → Nước → Lửa → Băng → Gió → Độc → (Đất)</div>
+
+    <div class="wheel-label">Vòng Thiên Thể — 3 nút (mỗi hệ khắc hệ kế tiếp)</div>
+    <div class="wheel">
+      <span class="chip"><span class="dot" style="color:var(--e-light)"></span>Ánh Sáng</span>
+      <span class="chip"><span class="dot" style="color:var(--e-dark)"></span>Bóng Tối</span>
+      <span class="chip"><span class="dot" style="color:var(--e-twilight)"></span>Chạng Vạng</span>
+      <span class="chip meta">✦ Triệu Hồi <span class="dim" style="font-weight:400">— không phải nguyên tố</span></span>
+    </div>
+    <div class="flow">Ánh Sáng → Bóng Tối → Chạng Vạng → (Ánh Sáng) &nbsp;·&nbsp; hai vòng không bao giờ khắc chéo nhau</div>
+
+    <h3>Mỗi Thiên Phú sở hữu đều có một bậc</h3>
+    <div class="tiers">
+      <span class="tier" style="background:var(--t-d)">D</span><span class="tier arrow">→</span>
+      <span class="tier" style="background:var(--t-c)">C</span><span class="tier arrow">→</span>
+      <span class="tier" style="background:var(--t-b)">B</span><span class="tier arrow">→</span>
+      <span class="tier" style="background:var(--t-a);color:#fff">A</span><span class="tier arrow">→</span>
+      <span class="tier" style="background:var(--t-s)">S</span><span class="tier arrow">→</span>
+      <span class="tier" style="background:var(--t-ss)">SS</span><span class="tier arrow">→</span>
+      <span class="tier" style="background:var(--t-sss)">SSS</span>
+    </div>
+
+    <h3>Cơ chế cốt lõi — hai tầng tác động</h3>
+    <div class="split">
+      <div class="layer active">
+        <div class="lh">Thiên Phú Kích Hoạt</div>
+        <div class="ls">Chỉ một tại một thời điểm</div>
+        <p>Thiên Phú bạn đang dùng quyết định <strong>biểu tượng bản sắc</strong>, <strong>chỉ số toàn cục</strong> (bậc của nó nhân hệ số tăng trưởng Máu + Tấn công), và <strong>Lãnh Địa</strong> nào buff/debuff lên bạn.</p>
+        <p class="dim">Đổi tự do — khi ngoài chiến đấu.</p>
+      </div>
+      <div class="layer owned">
+        <div class="lh">Thiên Phú Sở Hữu</div>
+        <div class="ls">Tất cả, luôn bật</div>
+        <p>Toàn bộ thư viện đã thức tỉnh của bạn. <strong>Sức mạnh kỹ năng</strong> của mỗi nguyên tố được tăng theo bậc sở hữu của <em>chính hệ đó</em> — bất kể đang kích hoạt Thiên Phú nào.</p>
+        <p class="dim">Nhiều Thiên Phú = thư viện phép sâu hơn, không phải chỉ số to hơn.</p>
+      </div>
+    </div>
+    <div class="callout cyan">
+      <div class="ct">Ví dụ minh họa</div>
+      <p>Kích hoạt = <strong>Băng</strong> (biểu tượng Băng; bậc Băng nuôi chỉ số của bạn). Đồng thời bạn sở hữu <strong>Lửa SSS</strong>. Bạn vẫn tung được kỹ năng Lửa — được tăng bởi Lửa SSS đó. → <em>"một pháp sư Lửa khoác bộ giáp chỉ số Băng."</em> Chỉ số toàn cục đến từ đúng <strong>một</strong> Thiên Phú kích hoạt, nên thức tỉnh thêm không bao giờ làm phình chỉ số gốc.</p>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section id="awakening">
+    <div class="kicker"><span class="num">03</span><h2>Thức Tỉnh — vòng lặp phát triển</h2></div>
+    <p class="lead">Nơi tiêu tài nguyên chính của tiến trình. Bạn <strong>Thức Tỉnh</strong> Thiên Phú mới và <strong>Nâng Cấp</strong> bậc của chúng bằng ba loại tiền. Mở rộng thì rẻ; lên cao mới là công sức cày.</p>
+
+    <div class="grid g3">
+      <div class="card"><h4>Thức Tỉnh</h4><p>Quay bậc khởi đầu của một Thiên Phú <em>mới</em> (RNG có trọng số). Dùng <span class="cur stone">Đá Thức Tỉnh</span> — rơi trong lối chơi, nên người chơi miễn phí vẫn sưu tập được nguyên tố.</p></div>
+      <div class="card"><h4>Nâng Cấp</h4><p>Nâng một Thiên Phú sở hữu lên từng bậc một — vẫn là RNG, có <strong>may mắn tích lũy</strong>. Dùng <span class="cur ess">Tinh Chất</span>.</p></div>
+      <div class="card"><h4>Quay Lại</h4><p>Quay lại toàn bộ bậc của một Thiên Phú bằng <span class="cur dia">Kim Cương</span> — <strong>có thể giảm</strong> chứ không chỉ tăng. Cỗ tiêu tiền / bàn đạp tăng tốc.</p></div>
+    </div>
+
+    <h3>① Canh bạc Thức Tỉnh — trọng số quay bậc</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Bậc</th><th>D</th><th>C</th><th>B</th><th>A</th><th>S</th><th>SS</th><th>SSS</th></tr></thead>
+        <tbody><tr><td>Trọng số</td><td class="n">40%</td><td class="n">26%</td><td class="n">17%</td><td class="n">10%</td><td class="n">5%</td><td class="n">1.8%</td><td class="n">0.2%</td></tr></tbody>
+      </table>
+    </div>
+    <p class="dim">S-trở-lên ≈ 7%. SSS ≈ 1/500 (giải độc đắc) — nhưng bậc thấp không bao giờ vô dụng, vì Nâng Cấp sẽ leo tới đó. Quay lúc <strong>tạo nhân vật</strong> bỏ SS/SSS rồi chuẩn hóa lại thành D 43 / C 28 / B 18 / A 8 / S 3%.</p>
+
+    <h3>② Tỉ lệ Nâng Cấp thành công — mỗi lần một bậc</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Nấc</th><th>D→C</th><th>C→B</th><th>B→A</th><th>A→S</th><th>S→SS</th><th>SS→SSS</th></tr></thead>
+        <tbody><tr><td>Thành công</td><td class="n">75%</td><td class="n">55%</td><td class="n">38%</td><td class="n">22%</td><td class="n">11%</td><td class="n">4%</td></tr></tbody>
+      </table>
+    </div>
+    <p class="dim">Thất bại = tốn nguyên liệu, giữ nguyên bậc — nhưng <strong>may mắn +5% mỗi lần trượt</strong>, reset khi thành công, để bậc cao là <em>cày</em> chứ không phải <em>ức chế</em>.</p>
+
+    <div class="callout void">
+      <div class="ct">Ý đồ thiết kế</div>
+      <p><strong>Mở rộng thì rẻ</strong> — sưu tập nguyên tố qua chơi. <strong>Lên cao mới tốn tiền &amp; công</strong> — bậc cao ngốn Tinh Chất và Kim Cương Quay Lại. <strong>Không giới hạn số lượng sở hữu</strong>: cuối cùng sở hữu cả 11, vì đích đến là <em>bậc, không phải số lượng</em>. Cỗ máy tạo nhu cầu mở rộng chính là Lãnh Địa (§04).</p>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section id="domains">
+    <div class="kicker"><span class="num">04</span><h2>Lãnh Địa — phần thưởng chiến thuật</h2></div>
+    <p class="lead">Một chiến trường có thể mang một <strong>Lãnh Địa nguyên tố</strong>: nó tăng cường một hệ và áp chế một hệ khác — chỉ tác động lên <strong>phe bạn</strong> (bạn + quái triệu hồi; kẻ địch không bị ảnh hưởng).</p>
+    <div class="grid g2">
+      <div class="card"><h4><span class="ico">▲</span>Hệ Tăng Cường</h4><p><strong>Thiên Phú Kích Hoạt</strong> trùng hệ được gói buff chỉ số (tầng 1), và <strong>kỹ năng + quái triệu hồi</strong> cùng hệ gây ~+30% (tầng 2).</p></div>
+      <div class="card"><h4><span class="ico">▼</span>Hệ Áp Chế</h4><p>Gói chỉ số đảo thành phạt, và sát thương hệ đó bị cắt ~−30%. Thường là hệ đối lập của hệ được tăng cường.</p></div>
+    </div>
+    <div class="callout">
+      <div class="ct">Sự căng thẳng nó tạo ra</div>
+      <p>Thiên Phú Kích Hoạt không đổi được giữa trận, và Lãnh Địa <strong>báo trước khi vào</strong>. Nên một Lãnh Địa Nước tối nay buộc bạn chọn: chạy <strong>Nước kích hoạt</strong> (chỉ số Nước yếu, nhưng có buff Lãnh Địa) hay <strong>Lửa SSS kích hoạt</strong> (chỉ số tuyệt vời, không buff — và bị phạt nếu Lửa bị áp chế)? → Đáp án thắng là sở hữu một <strong>kho Thiên Phú rộng, bậc cao</strong> và căn chỉnh theo từng chiến trường. <em>Đó</em> là lý do kinh tế Thức Tỉnh có nhu cầu. Ngay cả Căn Cứ cũng chạy một Lãnh Địa <strong>hàng ngày</strong> xoay vòng như một nghi thức live-ops tùy chọn.</p>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section id="leveling">
+    <div class="kicker"><span class="num">05</span><h2>Lên cấp — XP bạn cày, không mua thẳng</h2></div>
+    <p class="lead">Hạ quái cho XP theo từng con → XP tích lũy → <strong>cấp độ được suy ra từ XP</strong>. Máy chủ kiểm tra mọi lần nhận XP dựa trên thành phần đợt quái mà nó nắm giữ, nên XP theo từng con vẫn chống gian lận.</p>
+    <ul class="clean">
+      <li><strong>Cấp từ XP.</strong> Đường cong siêu tuyến mượt, trần cứng <strong>150</strong>, chia mốc 50-mỗi-dải. Chỉ <strong>Máu + Tấn công</strong> tăng theo cấp; phần còn lại giữ nguyên.</li>
+      <li><strong>Cổng dải.</strong> XP kiếm vượt trần đã mở được <strong>gửi tạm, không mất</strong> — áp dụng ngay khi canh bạc mở dải thành công.</li>
+      <li><strong>Kim Cương mua Sách XP</strong>, không mua thẳng cấp — con đường kim-cương→cấp duy nhất.</li>
+      <li><strong>Chết không phải thất bại.</strong> Hồi sinh không giới hạn, chỉ khóa bởi <strong>thời gian chờ</strong> mỗi lần — thời gian chờ <em>chính là</em> hình phạt, nên XP chảy liên tục.</li>
+    </ul>
+  </section>
+
+  <!-- 6 -->
+  <section id="stack">
+    <div class="kicker"><span class="num">06</span><h2>Chồng tăng trưởng — mọi thứ xếp lớp thế nào</h2></div>
+    <p class="lead">Mọi nguồn đều rút gọn về hai kênh sạch: <strong>chỉ số toàn cục</strong> và <strong>sức mạnh kỹ năng</strong>. Chúng không bao giờ tính trùng nhau.</p>
+
+    <h3>Chỉ số toàn cục (Máu + Tấn công)</h3>
+    <div class="pipe">
+      <div class="pstep"><div class="pn">GỐC</div><div class="pt">Chỉ số gốc đồng đều</div><div class="pd">Ai cũng như nhau (Nguồn Gốc là ngoại hình)</div></div>
+      <div class="pstep hi"><div class="pn">×</div><div class="pt">Bậc Thiên Phú Kích Hoạt</div><div class="pd">Hệ số tăng trưởng D…SSS</div></div>
+      <div class="pstep"><div class="pn">×</div><div class="pt">Tăng theo cấp</div><div class="pd">Máu + Tấn công mỗi cấp</div></div>
+      <div class="pstep"><div class="pn">×</div><div class="pt">Trang bị / Mảnh / Tinh Chỉnh</div><div class="pd">Phụ tố đã lắp</div></div>
+      <div class="pstep"><div class="pn">×</div><div class="pt">Lãnh Địa (tầng 1)</div><div class="pd">Nếu hệ kích hoạt được tăng/bị áp chế</div></div>
+    </div>
+
+    <h3>Sức mạnh kỹ năng (mỗi lần tung)</h3>
+    <div class="pipe">
+      <div class="pstep"><div class="pn">GỐC</div><div class="pt">Kỹ năng gốc</div><div class="pd">Chỉ số riêng của kỹ năng</div></div>
+      <div class="pstep hi"><div class="pn">×</div><div class="pt">Bậc sở hữu của hệ đó</div><div class="pd">D…SSS — độ sâu thư viện</div></div>
+      <div class="pstep"><div class="pn">×</div><div class="pt">Khớp vũ khí</div><div class="pd">cùng dòng 1.0 · đúng loại +1 cấp</div></div>
+      <div class="pstep"><div class="pn">×</div><div class="pt">Tăng Sức + trang bị/mảnh</div><div class="pd">Linh Hồn bùng nổ · phụ tố</div></div>
+      <div class="pstep"><div class="pn">×</div><div class="pt">Lãnh Địa (tầng 2)</div><div class="pd">Tăng/áp chế theo hệ</div></div>
+    </div>
+    <p class="dim">Các bước <span style="color:var(--orange-soft)">màu hổ phách</span> là nơi Thiên Phú phát huy: <strong>bậc kích hoạt</strong> nâng chỉ số, <strong>bậc sở hữu</strong> nâng kỹ năng từng hệ. Thức tỉnh rộng → nhiều phép được tăng; Nâng cấp cao → mỗi phép mạnh hơn.</p>
+  </section>
+
+  <!-- 7 -->
+  <section id="axes">
+    <div class="kicker"><span class="num">07</span><h2>Các trục hỗ trợ</h2></div>
+    <p class="lead">Thiên Phú là cỗ máy; đây là những gì bạn hướng nó qua.</p>
+    <div class="grid g2">
+      <div class="card">
+        <h4><span class="ico">⚔️</span>Vũ Khí</h4>
+        <p>Một trục thay cho kiểu cận/tầm xa + vật lý/phép cũ — <strong>30 vũ khí trong 4 nhóm</strong>, là trang bị đổi tự do. Mỗi vũ khí mã hóa tầm đánh, phòng thủ nào bị kiểm, và một đặc trưng riêng.</p>
+        <p><strong>Vũ khí đang cầm quyết định Sách Kỹ Năng nào hoạt động</strong> — đổi Gậy→Kiếm là một bộ kỹ năng khác sáng lên. Cùng dòng thì dùng được; đúng loại thì +1 cấp kỹ năng.</p>
+      </div>
+      <div class="card">
+        <h4><span class="ico">📖</span>Kỹ Năng — Sách &amp; Hạt Giống</h4>
+        <p><strong>Q / W / E / R</strong> = bốn Sách Kỹ Năng bạn gắn (khóa theo dòng vũ khí, mạnh theo Thiên Phú) — bộ kỹ năng bạn tự điều khiển. <strong>Hạt Giống</strong> khảm vào trang bị và tự động tung theo cơ chế riêng.</p>
+        <p><strong>T — Tăng Sức</strong> tiêu <strong>Linh Hồn</strong> để cường hóa đòn kế tiếp; một nội tại hồi Linh Hồn; <strong>Space — Lướt</strong> ai cũng có.</p>
+      </div>
+      <div class="card">
+        <h4><span class="ico">🐾</span>Trụ cột Triệu Hồi</h4>
+        <p>Hướng thuần thú: <strong>bắt → triệu → nuôi → tiến hóa</strong> một đội sinh vật thường trực. Chỉ số của chúng <strong>độc lập với nhân vật</strong> (loài × cấp × tiến hóa × bậc Triệu Hồi), nên đầu tư vào chúng thực sự đáng.</p>
+        <p>Ra trận tốn <strong>Linh Hồn giữ chỗ</strong> (chung bể với Tăng Sức — quân đông sẽ bòn rút sát thương bùng nổ của bạn) cộng <strong>hao Máu</strong> nuôi quân. Không giới hạn cứng: triệu bao nhiêu tùy sức bạn gánh.</p>
+      </div>
+      <div class="card">
+        <h4><span class="ico">💠</span>Trang Bị &amp; Mảnh</h4>
+        <p><strong>10 ô trang bị</strong> (5 tấn công / 5 phòng thủ), mỗi món là một bản quay có ổ khảm Hạt Giống. <strong>10 ô Mảnh theo màu nguyên tố</strong> — mỗi hệ một ô (bỏ Trung Tính, thêm <span style="color:var(--e-twilight)">Chạng Vạng</span>).</p>
+        <p>Nhân vật dùng cả 10; sinh vật bắt được lắp một <strong>phần con khóa theo hệ</strong> từ cùng bể dùng chung — nên phân bổ là một lựa chọn thật.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>
+      <span class="badge">Nguồn: character-system-redesign.md</span>
+      <span class="badge">leveling-xp-design.md</span>
+      <span class="badge">character-design.md</span>
+    </div>
+    <p style="margin-top:12px">HOLD: Origin Siege — tổng quan xây dựng &amp; phát triển nhân vật. Trạng thái thiết kế: đã chốt; phần còn lại là cân chỉnh, nghệ thuật &amp; triển khai. Con số là bản nháp đầu, chỉnh được từ máy chủ.</p>
+  </footer>
+
+</div>
+</body>
+</html>
