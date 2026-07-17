@@ -6,8 +6,7 @@
 <title>HOLD: Origin Siege — Cốt Truyện</title>
 <meta name="description" content="Thế giới và cốt truyện của HOLD: Origin Siege — Cội Nguồn, Hư Không, và cuộc trụ vững của Liên minh Ngũ Tộc.">
 <style>
-  /* Self-hosted Tomorrow (full glyph set incl. Vietnamese U+1EA0–U+1EF9).
-     Google's css2 CDN omits the Vietnamese subset, so we host it locally. */
+  /* Self-hosted Tomorrow (full glyph set incl. Vietnamese U+1EA0–U+1EF9). */
   @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:300; font-display:swap; src:url(fonts/Tomorrow-300.woff2) format("woff2"); }
   @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:400; font-display:swap; src:url(fonts/Tomorrow-400.woff2) format("woff2"); }
   @font-face { font-family:"Tomorrow"; font-style:italic; font-weight:400; font-display:swap; src:url(fonts/Tomorrow-400italic.woff2) format("woff2"); }
@@ -15,439 +14,426 @@
   @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:600; font-display:swap; src:url(fonts/Tomorrow-600.woff2) format("woff2"); }
   @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:700; font-display:swap; src:url(fonts/Tomorrow-700.woff2) format("woff2"); }
   @font-face { font-family:"Tomorrow"; font-style:normal; font-weight:900; font-display:swap; src:url(fonts/Tomorrow-900.woff2) format("woff2"); }
-  :root {
-    --bg:        #0a0e14;
-    --bg-2:      #0e141d;
-    --panel:     #121a25;
-    --panel-2:   #16202d;
-    --ink:       #d8e2ec;
-    --ink-soft:  #93a4b6;
-    --ink-dim:   #62748a;
-    --steel:     #2a3b4d;
-    --line:      #233141;
-    --cyan:      #36d1d8;
-    --cyan-soft: #7ce7ec;
-    --orange:    #ff8a3d;
-    --orange-soft:#ffb27a;
-    --void:      #b07bff;
-    --siege:     #8fe04a;
-    --siege-2:   #b07bff;
-    --maxw:      900px;
+
+  :root{
+    --bg:#07090f; --bg-2:#0a0e17; --panel:#101826; --panel-2:#14202e;
+    --ink:#e2ebf3; --ink-soft:#9db0c2; --ink-dim:#5f7186; --line:#1d2937;
+    --cyan:#36d1d8; --cyan-soft:#7ce7ec; --orange:#ff8a3d; --orange-soft:#ffb27a;
+    --void:#b07bff; --siege:#8fe04a; --twilight:#e879c6;
+    --earth:#c9a36a; --elec:#ffd84d; --water:#4db4ff; --fire:#ff7a3d; --ice:#8fe2ff;
+    --wind:#9be8b0; --poison:#a6e04a; --light:#fff2c2; --dark:#a07bff;
   }
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    margin: 0;
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Tomorrow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight:400; line-height:1.6; font-size:17px; letter-spacing:.1px;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  a{ color:var(--cyan); }
+  ::selection{ background:rgba(54,209,216,.3); color:#fff; }
+
+  /* scroll progress */
+  .progress{ position:fixed; top:0; left:0; height:3px; width:100%; transform:scaleX(0); transform-origin:0 50%;
+    background:linear-gradient(90deg,var(--cyan),var(--twilight),var(--orange)); z-index:90; box-shadow:0 0 14px rgba(54,209,216,.6); }
+
+  /* page nav */
+  .pagenav{ position:fixed; top:14px; left:14px; z-index:80; display:flex; gap:3px; padding:3px;
+    background:rgba(7,9,15,.7); border:1px solid var(--line); border-radius:999px;
+    -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); }
+  .pagenav a{ font-size:12px; font-weight:700; letter-spacing:.6px; padding:6px 13px; border-radius:999px;
+    color:var(--ink-dim); text-decoration:none; transition:color .15s, background .15s; }
+  .pagenav a.on{ background:linear-gradient(180deg,var(--cyan),#1f9aa0); color:#06121a; }
+  .pagenav a:not(.on):hover{ color:var(--ink); background:var(--panel-2); }
+
+  /* ===== HERO ===== */
+  .hero{ position:relative; min-height:100svh; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; text-align:center; padding:120px 22px 90px; overflow:hidden; isolation:isolate; }
+  .stage{ position:absolute; inset:-10% -10% -10% -10%; z-index:-1; }
+  .layer{ position:absolute; inset:0; will-change:transform; }
+  .l-void{ background:
+      radial-gradient(1000px 720px at 78% -8%, rgba(176,123,255,.20), transparent 60%),
+      radial-gradient(900px 640px at 12% 4%, rgba(176,123,255,.12), transparent 60%); }
+  .l-origin{ background:
+      radial-gradient(760px 520px at 50% 118%, rgba(54,209,216,.42), transparent 62%),
+      radial-gradient(520px 420px at 50% 128%, rgba(255,138,61,.30), transparent 60%);
+    animation:breathe 7s ease-in-out infinite; }
+  .l-grid{ background-image:
+      linear-gradient(rgba(54,209,216,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(54,209,216,.05) 1px, transparent 1px);
+    background-size:64px 64px; mask:radial-gradient(120% 80% at 50% 100%, #000 20%, transparent 70%);
+    -webkit-mask:radial-gradient(120% 80% at 50% 100%, #000 20%, transparent 70%); }
+  .breach{ position:absolute; top:-6%; left:50%; width:min(58vw,520px); height:64%;
+    transform:translateX(-50%); z-index:-1; pointer-events:none;
     background:
-      radial-gradient(1200px 700px at 50% -200px, rgba(54,209,216,.10), transparent 60%),
-      radial-gradient(900px 600px at 90% 10%, rgba(255,138,61,.06), transparent 55%),
-      radial-gradient(900px 700px at 5% 40%, rgba(176,123,255,.06), transparent 55%),
-      var(--bg);
-    color: var(--ink);
-    font-family: "Tomorrow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-weight: 400;
-    line-height: 1.75;
-    font-size: 17px;
-    letter-spacing: .1px;
-    -webkit-font-smoothing: antialiased;
-  }
-  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 22px 120px; }
+      radial-gradient(50% 42% at 50% 20%, rgba(232,121,198,.55), transparent 70%),
+      linear-gradient(180deg, rgba(176,123,255,.9), rgba(176,123,255,0) 92%);
+    clip-path:polygon(48% 0, 52% 0, 57% 22%, 50% 40%, 58% 60%, 49% 82%, 55% 100%, 45% 100%, 51% 78%, 43% 58%, 50% 38%, 44% 20%);
+    filter:blur(1px) drop-shadow(0 0 26px rgba(176,123,255,.55));
+    animation:flicker 4.5s ease-in-out infinite; opacity:.9; }
+  .vignette{ position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(3,5,9,.72) 100%); }
+  .scan{ position:absolute; inset:0; z-index:-1; pointer-events:none; mix-blend-mode:overlay;
+    background:repeating-linear-gradient(180deg, rgba(255,255,255,.02) 0 1px, transparent 1px 3px); }
+  .spores{ position:absolute; inset:0; z-index:-1; pointer-events:none; }
+  .spore{ position:absolute; bottom:-12px; width:4px; height:4px; border-radius:50%;
+    background:var(--siege); box-shadow:0 0 10px currentColor; color:var(--siege); opacity:0;
+    animation:rise linear infinite; }
 
-  /* ---- Hero ---- */
-  header.hero {
-    position: relative;
-    text-align: center;
-    padding: 90px 22px 70px;
-    overflow: hidden;
-    border-bottom: 1px solid var(--line);
-    background:
-      linear-gradient(180deg, rgba(18,26,37,.0), rgba(10,14,20,.6)),
-      repeating-linear-gradient(115deg, rgba(54,209,216,.035) 0 2px, transparent 2px 26px);
-  }
-  .hero .eyebrow {
-    font-family: "Tomorrow", sans-serif;
-    font-weight: 700;
-    letter-spacing: 6px;
-    font-size: 12px;
-    color: var(--cyan);
-    text-transform: uppercase;
-    margin-bottom: 18px;
-  }
-  .hero h1 {
-    font-family: "Tomorrow", sans-serif;
-    font-weight: 900;
-    font-size: clamp(34px, 7vw, 68px);
-    line-height: .98;
-    margin: 0;
-    background: linear-gradient(180deg, #ffffff 0%, var(--cyan-soft) 60%, var(--cyan) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: 0 0 38px rgba(54,209,216,.25);
-  }
-  .hero h1 .siege-word {
-    background: linear-gradient(180deg, #ffffff 0%, var(--orange-soft) 60%, var(--orange) 100%);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    text-shadow: 0 0 38px rgba(255,138,61,.22);
-  }
-  .hero .sub {
-    margin-top: 16px;
-    font-size: clamp(15px, 2.6vw, 19px);
-    color: var(--ink-soft);
-    font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-  .hero .tagline {
-    max-width: 640px;
-    margin: 26px auto 0;
-    color: var(--ink);
-    font-size: clamp(16px, 2.4vw, 19px);
-    font-style: italic;
-    font-weight: 300;
-  }
-  .scanline {
-    position:absolute; inset:0; pointer-events:none;
-    background: repeating-linear-gradient(180deg, rgba(255,255,255,.012) 0 1px, transparent 1px 3px);
-    mix-blend-mode: overlay;
-  }
+  .eyebrow{ font-weight:700; letter-spacing:7px; font-size:12px; color:var(--cyan); text-transform:uppercase; margin-bottom:22px; }
+  .hero h1{ font-weight:600; font-size:clamp(46px,12vw,132px); line-height:.9; margin:0; letter-spacing:-1px; }
+  .hero h1 .l1{ display:block; background:linear-gradient(180deg,#fff,var(--cyan-soft) 60%,var(--cyan));
+    -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:0 0 60px rgba(54,209,216,.28); }
+  .hero h1 .l2{ display:block; background:linear-gradient(180deg,#fff,var(--orange-soft) 55%,var(--orange));
+    -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:0 0 60px rgba(255,138,61,.24); }
+  .hero .sub{ margin-top:20px; font-size:clamp(15px,2.6vw,20px); color:var(--ink-soft); font-weight:600; letter-spacing:6px; text-transform:uppercase; }
+  .hero .tagline{ max-width:640px; margin:26px auto 0; color:var(--ink); font-size:clamp(16px,2.4vw,20px); font-style:italic; font-weight:300; }
+  .hero .tagline strong{ color:#fff; font-style:normal; font-weight:700; }
+  .cue{ position:absolute; bottom:26px; left:50%; transform:translateX(-50%); color:var(--ink-dim);
+    font-size:11px; letter-spacing:3px; text-transform:uppercase; display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .cue .arrow{ width:9px; height:9px; border-right:2px solid var(--cyan); border-bottom:2px solid var(--cyan);
+    transform:rotate(45deg); animation:bob 1.8s ease-in-out infinite; }
 
-  /* ---- Sections ---- */
-  section { margin-top: 60px; }
-  .num {
-    font-family: "Tomorrow", sans-serif;
-    color: var(--cyan);
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: 3px;
-  }
-  h2 {
-    font-family: "Tomorrow", sans-serif;
-    font-weight: 700;
-    font-size: clamp(22px, 4vw, 30px);
-    line-height: 1.2;
-    margin: 8px 0 4px;
-    color: #eaf2f8;
-  }
-  h2 .accent { color: var(--cyan); }
-  .lead { color: var(--ink-soft); font-weight: 300; font-size: 18px; margin-top: 0; }
-  h2 + .rule {
-    height: 2px; width: 64px; margin: 14px 0 22px;
-    background: linear-gradient(90deg, var(--cyan), transparent);
-  }
-  p { margin: 0 0 18px; }
-  strong { color: #f1f6fb; font-weight: 600; }
-  em { color: var(--cyan-soft); font-style: italic; }
-  .term { color: var(--orange-soft); font-weight: 600; }
-  .void-term { color: var(--void); font-weight: 600; }
+  /* ===== BANDS ===== */
+  .band{ position:relative; padding:clamp(96px,15vh,168px) 22px; overflow:hidden; }
+  .inner{ max-width:1000px; margin:0 auto; }
+  .band.dark{ background:
+      radial-gradient(900px 600px at 80% 0%, rgba(176,123,255,.14), transparent 60%),
+      linear-gradient(180deg, #06070c, #0a0713); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .band.deep{ background:linear-gradient(180deg,#080b12,#06080e); }
+  .kick{ font-weight:700; letter-spacing:5px; font-size:12px; text-transform:uppercase; color:var(--cyan); margin-bottom:18px; }
+  .kick.v{ color:var(--void); }
+  .say{ font-weight:600; font-size:clamp(30px,6vw,68px); line-height:1.02; margin:0; letter-spacing:-.5px; color:#f2f7fb; }
+  .say .hl{ background:linear-gradient(180deg,#fff,var(--cyan)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .say .hlv{ background:linear-gradient(180deg,#fff,var(--void)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .say .hlo{ background:linear-gradient(180deg,#fff,var(--orange)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .say .hls{ color:var(--siege); }
+  .lede{ max-width:620px; color:var(--ink-soft); font-size:clamp(16px,2.2vw,20px); font-weight:300; margin:22px 0 0; }
+  .lede.center{ margin-left:auto; margin-right:auto; }
 
-  /* ---- Cards / callouts ---- */
-  .panel {
-    background: linear-gradient(180deg, var(--panel), var(--bg-2));
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 22px 24px;
-    margin: 22px 0;
-  }
-  .note {
-    border-left: 3px solid var(--cyan);
-    background: linear-gradient(90deg, rgba(54,209,216,.06), transparent 80%);
-    border-radius: 0 12px 12px 0;
-    padding: 16px 20px;
-    margin: 22px 0;
-    color: var(--ink-soft);
-    font-size: 15.5px;
-  }
-  .note.orange { border-left-color: var(--orange); background: linear-gradient(90deg, rgba(255,138,61,.06), transparent 80%); }
-  .note.void   { border-left-color: var(--void);   background: linear-gradient(90deg, rgba(176,123,255,.07), transparent 80%); }
-  .note b { color: #eaf2f8; }
+  /* triptych */
+  .trip{ display:flex; flex-direction:column; gap:clamp(60px,10vh,120px); }
+  .beat{ display:grid; grid-template-columns:auto 1fr; gap:clamp(20px,4vw,54px); align-items:center; }
+  .beat .no{ font-weight:900; font-size:clamp(56px,12vw,150px); line-height:.8; color:transparent;
+    -webkit-text-stroke:1.5px rgba(124,231,236,.35); }
+  .beat .word{ font-weight:600; font-size:clamp(34px,7vw,84px); line-height:.98; letter-spacing:-1px; margin:0 0 12px; }
+  .beat .word .g1{ background:linear-gradient(180deg,#fff,var(--cyan)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .beat .word .g2{ background:linear-gradient(180deg,#fff,var(--void)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .beat .word .g3{ background:linear-gradient(180deg,#fff,var(--orange)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .beat p{ margin:0; color:var(--ink-soft); font-size:clamp(15px,2vw,19px); font-weight:300; max-width:560px; }
 
-  /* ---- Tables ---- */
-  .tbl { width: 100%; border-collapse: collapse; margin: 14px 0 6px; font-size: 15.5px; }
-  .tbl th {
-    text-align: left;
-    font-family: "Tomorrow", sans-serif;
-    font-weight: 500;
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--cyan);
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--line);
+  /* split (title meanings) */
+  .split{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:34px; }
+  .facet{ position:relative; padding:30px 26px; border:1px solid var(--line); border-radius:16px; overflow:hidden;
+    background:linear-gradient(180deg,var(--panel),var(--bg-2)); transition:transform .3s, border-color .3s, box-shadow .3s; }
+  .facet::before{ content:""; position:absolute; inset:0; opacity:.5;
+    background:radial-gradient(300px 200px at 100% 0%, rgba(255,138,61,.12), transparent 70%); }
+  .facet.v::before{ background:radial-gradient(300px 200px at 0% 100%, rgba(176,123,255,.14), transparent 70%); }
+  .facet:hover{ transform:translateY(-6px); border-color:rgba(54,209,216,.4); box-shadow:0 20px 50px -20px rgba(0,0,0,.7); }
+  .facet .ft{ position:relative; font-weight:900; font-size:clamp(20px,3vw,28px); margin:0 0 10px; color:#fff; }
+  .facet.o .ft{ color:var(--orange-soft); } .facet.v .ft{ color:var(--void); }
+  .facet p{ position:relative; margin:0; color:var(--ink-soft); font-size:15.5px; font-weight:300; }
+
+  /* origin cards */
+  .origins{ display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-top:38px; }
+  .oc{ position:relative; padding:24px 18px; border:1px solid var(--line); border-radius:16px;
+    background:linear-gradient(180deg,var(--panel),var(--bg-2)); overflow:hidden;
+    transition:transform .3s, border-color .3s, box-shadow .3s; }
+  .oc:hover{ transform:translateY(-8px); border-color:var(--glow,rgba(54,209,216,.5)); box-shadow:0 22px 46px -22px var(--glow,rgba(54,209,216,.5)); }
+  .oc .glyph{ width:46px; height:46px; margin-bottom:16px; border-radius:12px; display:grid; place-items:center;
+    font-size:22px; background:rgba(255,255,255,.04); border:1px solid var(--line); box-shadow:0 0 22px -6px var(--glow); }
+  .oc h3{ margin:0 0 3px; font-size:16px; color:#fff; font-weight:700; letter-spacing:.3px; }
+  .oc .en{ font-size:11px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:1.5px; }
+  .oc p{ margin:12px 0 0; font-size:13.5px; color:var(--ink-soft); font-weight:300; line-height:1.5; }
+  .banner{ margin-top:26px; text-align:center; font-size:14px; color:var(--ink-dim); }
+  .banner b{ color:var(--cyan-soft); font-weight:600; }
+
+  /* element wheel */
+  .wheelwrap{ display:flex; flex-direction:column; align-items:center; }
+  .orbit{ position:relative; width:var(--wheel); height:var(--wheel); margin:26px auto 8px;
+    --wheel:clamp(300px,84vw,470px); --r-nat:calc(var(--wheel)*.405); --r-cel:calc(var(--wheel)*.155); }
+  .ring{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); border-radius:50%; border:1px dashed rgba(124,231,236,.16); }
+  .ring.nat{ width:calc(var(--r-nat)*2); height:calc(var(--r-nat)*2); animation:spin 44s linear infinite; }
+  .ring.cel{ width:calc(var(--r-cel)*2); height:calc(var(--r-cel)*2); border-color:rgba(232,121,198,.25); animation:spin 30s linear infinite reverse; }
+  .core{ position:absolute; top:50%; left:50%; width:76px; height:76px; margin:-38px 0 0 -38px; border-radius:50%;
+    background:radial-gradient(circle, rgba(124,231,236,.9), rgba(54,209,216,.25) 55%, transparent 72%);
+    display:grid; place-items:center; animation:pulse 5s ease-in-out infinite; }
+  .core span{ font-size:9px; letter-spacing:1.5px; color:#04121a; font-weight:800; text-transform:uppercase; }
+  .node{ position:absolute; top:50%; left:50%; width:70px; height:60px; margin:-30px 0 0 -35px;
+    display:flex; flex-direction:column; align-items:center; gap:7px; text-align:center;
+    transform:rotate(var(--a)) translateY(calc(-1*var(--r))) rotate(calc(-1*var(--a))); }
+  .node .nd{ width:15px; height:15px; border-radius:50%; background:var(--c); box-shadow:0 0 14px var(--c), 0 0 4px #fff inset; }
+  .node .nl{ font-size:12px; color:var(--ink-soft); font-weight:600; white-space:nowrap; }
+  .node.cel .nl{ font-size:11px; }
+
+  /* loop rail */
+  .loops{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:38px; }
+  .loop{ position:relative; padding:26px 22px; border:1px solid var(--line); border-radius:16px;
+    background:linear-gradient(180deg,var(--panel),var(--bg-2)); border-top:3px solid var(--orange);
+    transition:transform .3s, box-shadow .3s; }
+  .loop.clan{ border-top-color:var(--void); }
+  .loop:hover{ transform:translateY(-6px); box-shadow:0 22px 46px -24px rgba(0,0,0,.7); }
+  .loop h3{ margin:0 0 10px; font-size:17px; color:#fff; font-weight:700; }
+  .loop p{ margin:0; font-size:14px; color:var(--ink-soft); font-weight:300; line-height:1.55; }
+  .loop .tag{ font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--orange-soft); font-weight:700; }
+  .loop.clan .tag{ color:var(--void); }
+
+  /* enemy chips */
+  .foes{ display:flex; flex-wrap:wrap; gap:10px; margin-top:30px; }
+  .foe{ padding:9px 16px; border-radius:999px; font-size:14px; font-weight:600; color:var(--siege);
+    border:1px solid rgba(143,224,74,.3); background:rgba(143,224,74,.06); }
+
+  /* closing */
+  .close{ text-align:center; }
+  .close .say{ margin-bottom:30px; }
+  .cta{ display:inline-flex; align-items:center; gap:10px; padding:15px 30px; border-radius:999px;
+    font-weight:700; letter-spacing:.4px; text-decoration:none; color:#06121a;
+    background:linear-gradient(180deg,var(--cyan-soft),var(--cyan)); box-shadow:0 14px 40px -12px rgba(54,209,216,.6);
+    transition:transform .2s, box-shadow .2s; }
+  .cta:hover{ transform:translateY(-3px); box-shadow:0 20px 50px -12px rgba(54,209,216,.75); }
+
+  footer{ padding:44px 22px 60px; border-top:1px solid var(--line); color:var(--ink-dim); font-size:13px; text-align:center; }
+  footer .title{ color:var(--ink-soft); letter-spacing:2px; font-weight:700; margin-bottom:8px; }
+
+  /* reveal */
+  [data-reveal]{ opacity:0; transform:translateY(30px); transition:opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); transition-delay:var(--d,0s); }
+  [data-reveal].in{ opacity:1; transform:none; }
+
+  /* keyframes */
+  @keyframes breathe{ 0%,100%{ opacity:.85; transform:scale(1); } 50%{ opacity:1; transform:scale(1.06); } }
+  @keyframes flicker{ 0%,100%{ opacity:.9; } 45%{ opacity:.62; } 60%{ opacity:1; } 72%{ opacity:.7; } }
+  @keyframes rise{ 0%{ opacity:0; transform:translateY(0) translateX(0); } 12%{ opacity:.9; } 88%{ opacity:.7; } 100%{ opacity:0; transform:translateY(-104vh) translateX(var(--dx,0)); } }
+  @keyframes bob{ 0%,100%{ transform:rotate(45deg) translate(0,0); } 50%{ transform:rotate(45deg) translate(3px,3px); } }
+  @keyframes spin{ to{ transform:translate(-50%,-50%) rotate(360deg); } }
+  @keyframes pulse{ 0%,100%{ transform:scale(1); filter:brightness(1); } 50%{ transform:scale(1.12); filter:brightness(1.25); } }
+
+  @media (max-width:820px){
+    .origins{ grid-template-columns:repeat(2,1fr); }
+    .loops{ grid-template-columns:1fr; }
   }
-  .tbl td {
-    padding: 14px;
-    border-bottom: 1px solid rgba(35,49,65,.6);
-    vertical-align: top;
-    color: var(--ink-soft);
-  }
-  .tbl td strong { color: #eaf2f8; }
-  .tbl tr:hover td { background: rgba(54,209,216,.03); }
-  .tbl .lead-cell { color: var(--orange-soft); font-weight: 600; white-space: nowrap; }
-
-  /* ---- Origin / element chips ---- */
-  .wheel { display:flex; flex-wrap:wrap; gap:9px; margin:18px 0 4px; }
-  .chip {
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    padding: 7px 15px;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--ink-soft);
-    background: var(--panel-2);
-    display:inline-flex; align-items:center; gap:8px;
-  }
-  .chip .dot { width:9px; height:9px; border-radius:50%; box-shadow:0 0 10px currentColor; }
-  .dot.earth{color:#c9a36a} .dot.elec{color:#ffd84d} .dot.water{color:#4db4ff}
-  .dot.fire{color:#ff7a3d} .dot.ice{color:#8fe2ff} .dot.wind{color:#9be8b0}
-  .dot.poison{color:#a6e04a} .dot.light{color:#fff2c2} .dot.dark{color:#a07bff}
-  .dot.neutral{color:#b8c4d0}
-
-  .loop-grid { display:grid; grid-template-columns:1fr; gap:14px; margin-top:8px; }
-  .loop {
-    background: linear-gradient(180deg, var(--panel), var(--bg-2));
-    border:1px solid var(--line); border-left:3px solid var(--orange);
-    border-radius: 0 12px 12px 0; padding:18px 20px;
-  }
-  .loop h3 { margin:0 0 6px; font-family:"Tomorrow",sans-serif; font-size:16px; color:#eaf2f8; letter-spacing:.5px; }
-  .loop p { margin:0; color:var(--ink-soft); font-size:15.5px; }
-  .loop.clan { border-left-color: var(--void); }
-
-  /* ---- Footer ---- */
-  footer {
-    margin-top: 80px; padding-top: 28px;
-    border-top: 1px solid var(--line);
-    color: var(--ink-dim); font-size: 13px; text-align:center;
-  }
-  footer .title { font-family:"Tomorrow",sans-serif; color:var(--ink-soft); letter-spacing:2px; }
-
-  a { color: var(--cyan); }
-  ::selection { background: rgba(54,209,216,.3); color:#fff; }
-
-  /* ---- Page nav (Lore ↔ Growth) ---- */
-  .pagenav { position:fixed; top:14px; left:14px; z-index:60; display:flex; gap:3px; padding:3px; background:rgba(10,14,20,.82); border:1px solid var(--line); border-radius:999px; -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
-  .pagenav a { font-size:12px; font-weight:700; letter-spacing:.6px; padding:5px 12px; border-radius:999px; color:var(--ink-dim); text-decoration:none; transition:color .12s, background .12s; }
-  .pagenav a.on { background:linear-gradient(180deg,var(--cyan),#1f9aa0); color:#0a0e14; }
-  .pagenav a:not(.on):hover { color:var(--ink); background:var(--panel-2); }
-  @media (max-width:520px){ .pagenav { top:10px; left:10px; } .pagenav a { padding:5px 10px; } }
-
   @media (max-width:560px){
     body{ font-size:16px; }
-    .tbl, .tbl tbody, .tbl tr, .tbl td { display:block; width:100%; }
-    .tbl thead { display:none; }
-    .tbl td { border-bottom:none; padding:4px 0; }
-    .tbl tr { border-bottom:1px solid var(--line); padding:14px 0; display:block; }
-    .tbl .lead-cell { color:var(--orange-soft); font-size:16px; margin-bottom:4px; }
+    .split{ grid-template-columns:1fr; }
+    .beat{ grid-template-columns:1fr; gap:6px; }
+    .beat .no{ font-size:64px; }
+    .pagenav{ top:10px; left:10px; }
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{ animation:none !important; }
+    [data-reveal]{ opacity:1 !important; transform:none !important; transition:none !important; }
+    html{ scroll-behavior:auto; }
   }
 </style>
+<noscript><style>[data-reveal]{opacity:1!important;transform:none!important}.cue,.spore{display:none}</style></noscript>
 </head>
 <body>
+
+<div class="progress" id="prog"></div>
 
 <nav class="pagenav" aria-label="Trang">
   <a href="index.html" class="on">Cốt Truyện</a>
   <a href="character-growth-vi.html">Phát Triển</a>
 </nav>
 
+<!-- ===== HERO ===== -->
 <header class="hero">
-  <div class="scanline"></div>
+  <div class="stage" id="stage">
+    <div class="layer l-void"  data-depth="6"></div>
+    <div class="layer l-grid"  data-depth="14"></div>
+    <div class="layer l-origin" data-depth="9"></div>
+  </div>
+  <div class="breach" data-depth="22"></div>
+  <div class="spores" id="spores"></div>
+  <div class="vignette"></div>
+  <div class="scan"></div>
+
   <div class="eyebrow">Cốt Truyện · World Lore</div>
-  <h1>HOLD<br><span class="siege-word">ORIGIN SIEGE</span></h1>
+  <h1><span class="l1">HOLD</span><span class="l2">ORIGIN SIEGE</span></h1>
   <div class="sub">Vây Hãm Cội Nguồn</div>
-  <p class="tagline">Thực tại vận hành nhờ một mạch nguồn duy nhất. Có thứ đã xé toạc nó. Mỗi đêm, bạn phải <strong>TRỤ VỮNG</strong>.</p>
+  <p class="tagline">Thực tại chảy ra từ một mạch nguồn. Có thứ đã xé nó toạc. Mỗi đêm — bạn phải <strong>TRỤ VỮNG</strong>.</p>
+
+  <div class="cue"><span>Cuộn xuống</span><span class="arrow"></span></div>
 </header>
 
-<div class="wrap">
-
-  <!-- Logline -->
-  <section>
-    <div class="num">// MỞ ĐẦU</div>
-    <h2>Lời <span class="accent">dẫn</span></h2>
-    <div class="rule"></div>
-    <p>Toàn bộ thực tại vận hành nhờ một mạch nguồn duy nhất, gọi là <span class="term">Cội Nguồn</span> (the Origin). Bên ngoài nó là <span class="void-term">Hư Không</span> (the Void) — một <em>phi-cảnh-giới</em> của sự hỗn loạn mang theo ý chí, đã ép mình vào tạo hóa suốt một thiên niên kỷ.</p>
-    <p>Cuối cùng, nó đã chọc thủng qua: một <span class="void-term">Vết Nứt</span> (the Breach). Từ vết thương ấy tuôn ra <span class="term">Bầy Vây Hãm</span> (the Siege) — một bầy đàn tự nhân bản, ăn tươi nuốt sống chính tạo hóa, và bò về phía thứ ánh sáng duy nhất đáng để ngấu nghiến.</p>
-    <p>Bạn chỉ huy pháo đài cuối cùng được dựng <strong>ngay trên đỉnh Cội Nguồn</strong>. Mỗi đêm, bạn <strong>TRỤ VỮNG</strong>. Và — qua một chiến dịch dài đằng đẵng của những mỏ neo bị hạ gục và lãnh thổ được giành lại — bạn <em>có thể</em> bịt kín vết thương ấy mãi mãi.</p>
-  </section>
-
-  <!-- Title meaning -->
-  <section>
-    <div class="num">// Ý NGHĨA TỰA ĐỀ</div>
-    <h2>Hai tầng nghĩa của <span class="accent">"Origin Siege"</span></h2>
-    <div class="rule"></div>
-    <p>Tên gọi <strong>"Origin Siege" — Vây Hãm Cội Nguồn</strong> cố tình mang hai lưỡi nghĩa:</p>
-    <div class="panel">
-      <p style="margin-bottom:14px"><span class="term">▸ Cuộc vây hãm <em>nhắm vào</em> Cội Nguồn</span> — bầy đàn của Hư Không vây hãm mạch nguồn để dập tắt nó.</p>
-      <p style="margin:0"><span class="term">▸ Cuộc vây hãm <em>được trấn giữ bởi</em> các Tộc Nguồn</span> — năm chủng loài (trục <strong>Origin</strong>) mà liên minh đầy bất an của họ chính là lằn ranh phòng thủ.</p>
+<!-- ===== LOGLINE TRIPTYCH ===== -->
+<section class="band deep">
+  <div class="inner trip">
+    <div class="beat" data-reveal>
+      <div class="no">01</div>
+      <div><h2 class="word"><span class="g1">CỘI NGUỒN</span></h2>
+        <p>Một mạch nguồn duy nhất. Toàn bộ vật chất, năng lượng và sự sống tuôn ra từ đó — thứ duy nhất Hư Không không thể xóa bỏ từ xa.</p></div>
     </div>
-    <p>Toàn bộ trò chơi là cuộc giằng co ấy — và sự xoay chuyển chậm rãi của nó.</p>
-  </section>
-
-  <!-- The Origin -->
-  <section>
-    <div class="num">// CỘI NGUỒN</div>
-    <h2>Cội Nguồn — <span class="accent">mạch nguồn</span></h2>
-    <p class="lead">Vì sao căn cứ của bạn rỉ ra tài nguyên bất tận.</p>
-    <div class="rule"></div>
-    <p><span class="term">Cội Nguồn</span> là một mạch nguồn nguyên thủy, nơi <strong>mười nguyên tố</strong> tuôn chảy: <strong>Vòng Tròn Tự Nhiên</strong> bảy nguyên tố (Đất → Lôi → Thủy → Hỏa → Băng → Phong → Độc) cùng cặp <strong>Quang/Ám đối ngẫu</strong> bao quanh nó. Đó là điểm khởi sinh của vật chất, năng lượng và sự sống — và là thứ duy nhất trong tồn tại mà Hư Không không thể chỉ đơn thuần xóa bỏ từ xa.</p>
-    <div class="note">
-      <p style="margin:0 0 12px"><b>Đại bản doanh (HQ) tọa lạc ngay trên mạch nguồn</b> — đó là lý do nó <em>rỉ</em> tài nguyên liên tục, kể cả khi bạn ngoại tuyến. Dòng chảy ấy <strong>chính là</strong> cơ chế <b>thu nhập nhàn rỗi</b> (idle): bạn không "thu tiền", bạn đang khai thác dòng máu không ngừng của Cội Nguồn.</p>
-      <p style="margin:0"><b>Nâng cấp HQ là giành lại lãnh thổ quanh mạch nguồn.</b> Mỗi vành đai chiến trường mở thêm sau mỗi 10 cấp HQ là phần đất bị đẩy lùi khỏi Bầy Vây Hãm — chính là tiền tuyến của cuộc chiến, lan rộng ra ngoài khi bạn mạnh lên.</p>
+    <div class="beat" data-reveal>
+      <div class="no">02</div>
+      <div><h2 class="word"><span class="g2">VẾT NỨT</span></h2>
+        <p>Hư Không xé thủng lớp vỏ thực tại. Từ vết thương ấy, <strong>Bầy Vây Hãm</strong> tràn qua — nuốt tươi tạo hóa, bò về phía ánh sáng.</p></div>
     </div>
-  </section>
-
-  <!-- The Void and Breach -->
-  <section>
-    <div class="num">// HƯ KHÔNG &amp; VẾT NỨT</div>
-    <h2>Hư Không và <span class="accent">Vết Nứt</span></h2>
-    <p class="lead">Kẻ thù — và vì sao cuộc chiến này <em>có thể thắng</em>.</p>
-    <div class="rule"></div>
-    <div class="note void">
-      <p style="margin:0"><b>Hư Không là một thế lực riêng — KHÔNG phải nguyên tố Ám.</b> Ám chỉ là một kênh bình thường của Cội Nguồn (mắt xích "hủy diệt" trong Vòng Thiên Thể Quang → Ám → Chạng Vạng). <span class="void-term">Hư Không</span> là thứ hoàn toàn khác: phi-cảnh-giới <em>bên ngoài</em> ánh sáng của Cội Nguồn, nơi sự tồn tại mỏng dần về hư vô.</p>
+    <div class="beat" data-reveal>
+      <div class="no">03</div>
+      <div><h2 class="word"><span class="g3">TRỤ VỮNG</span></h2>
+        <p>Pháo đài cuối cùng dựng ngay trên mạch nguồn. Giữ nó qua từng đêm — rồi bào mòn vết thương cho tới khi nó khép lại <em>mãi mãi</em>.</p></div>
     </div>
-    <p>Hư Không không có vòng tròn, không có chu kỳ, không có sáng tạo — chỉ có cơn đói. Suốt một thiên niên kỷ nó ép mình vào lớp vỏ của thực tại; <span class="void-term">Vết Nứt</span> là nơi nó cuối cùng xé toạc qua, ngay phía trên Cội Nguồn này. Nó không hẳn <em>hủy diệt</em> thứ nó chạm tới, mà <strong>viết lại</strong> chúng: vật chất sống bị kéo gần Vết Nứt sẽ bị tháo rời và tái sinh thành <span class="term">Bầy Vây Hãm</span>.</p>
-    <p><strong>Cuộc chiến có thể thắng — qua cả một chiến dịch, không phải một đêm.</strong> Vết Nứt bị giữ mở từ phía bên kia bởi những <span class="void-term">Kẻ Nuốt Thế Giới</span> (World-Eaters) — những mỏ neo sống khổng lồ (chính là các <em>boss bang hội</em>) mà khối lượng của chúng giữ cho vết thương luôn giãn rộng. Mỗi Kẻ Nuốt Thế Giới bị hạ gục sẽ khép lại một mảng Vết Nứt và trả lại chừng ấy thực tại cho Cội Nguồn. Chân trời chiến thắng của cả trò chơi là <strong>bịt kín Vết Nứt</strong> bằng cách bào mòn từng mỏ neo của nó.</p>
-    <p>Đây là lý do vòng lặp từng phút vẫn là <em>một cuộc Trụ Vững không có màn-hình-thua</em> — một đêm phòng thủ đơn lẻ không thể khép một vết thương vũ trụ, nên việc mất HQ là một bước lùi, không phải dấu chấm hết, và bầy đàn đêm đó vẫn cứ đổ về không ngừng. Nhưng <strong>cuộc chiến tổng thể thì uốn chuyển</strong>: những vành đai giành lại, những mỏ neo đã chết, và một Vết Nứt đang co lại — đó là tiến triển thật, bền vững, hướng về một kết thúc thật.</p>
-  </section>
+  </div>
+</section>
 
-  <!-- The Siege -->
-  <section>
-    <div class="num">// BẦY VÂY HÃM</div>
-    <h2>Bầy <span class="accent">Vây Hãm</span></h2>
-    <p class="lead">Tạo hình kẻ thù, được lý giải.</p>
-    <div class="rule"></div>
-    <p>Bầy Vây Hãm có lớp giáp kitin, là một tâm trí bầy đàn, <strong style="color:var(--siege)">phát quang sinh học xanh lục / tím</strong>, và nhân bản vô tận — là vật chất đã bị Hư Không viết lại, không phải một loài. Đó là lý do của sự tương phản gay gắt trong định hướng nghệ thuật: <strong>nhân vật và công trình rực sáng, ấm áp sắc lam-cyan và cam</strong> (trật tự của mạch nguồn) đối đầu với <strong style="color:var(--siege)">lũ quái vật phát quang ma quái</strong> (sự viết lại). Lũ Chạy (Runner), Hộ Pháp (Bruiser), Phun Độc (Spitter) và Bạo Chúa Tổ (Hive-Tyrant) đều là những biểu hiện leo thang của cùng một cơn đói, mỗi con mang một <em>thẻ nguyên tố</em> — Bầy Vây Hãm tha hóa <em>thông qua</em> một kênh nguyên tố, nên việc thức tỉnh đúng Thiên Phú nguyên tố (nhất là Ánh Sáng và Bóng Tối) biến nhân vật của bạn thành chuyên gia khắc chế từng loại tha hóa cụ thể.</p>
-  </section>
-
-  <!-- The five Origins -->
-  <section>
-    <div class="num">// LIÊN MINH NGŨ TỘC</div>
-    <h2>Năm Tộc Nguồn — <span class="accent">liên minh của bạn</span></h2>
-    <p class="lead">Vì sao nhân vật của bạn thuộc về một trong năm dân tộc — và vì sao điều đó chỉ định hình dáng vẻ, không định đoạt sức mạnh.</p>
-    <div class="rule"></div>
-    <p>Những người trấn giữ không cùng một dân tộc. Khi mạch nguồn lần đầu gào thét, năm chủng loài đã đáp lời, và pháo đài là liên minh ra đời từ sự bức thiết của họ. Bạn chơi <strong>một nhân vật duy nhất do chính bạn tạo ra</strong>; chọn <span class="term">Nguồn Gốc (Origin)</span> là chọn bạn thuộc về dân tộc nào — nó định hình <strong>ngoại hình nhân vật và cả căn cứ của bạn</strong> (tường thành, trụ pháo, bầu trời) cùng chỗ đứng của bạn trong liên minh, chứ <strong>không</strong> đụng tới sức mạnh. Sức mạnh đến từ những <span class="term">Thiên Phú</span> bạn thức tỉnh — nên <strong>bất kỳ Nguồn Gốc nào cũng đi được bất kỳ lối chơi nào</strong>. Đó cũng là lý do năm dân tộc là đồng minh, không phải một học thuyết duy nhất, mỗi dân tộc mang theo cách dẫn truyền Cội Nguồn của riêng mình. <span style="color:var(--ink-dim)">(Toàn bộ cách xây dựng &amp; phát triển nằm ở trang <a href="character-growth-vi.html">Phát Triển</a>.)</span></p>
-
-    <table class="tbl">
-      <thead><tr><th style="width:24%">Tộc Nguồn</th><th style="width:46%">Họ là ai</th><th>Dấu ấn căn cứ <span style="color:var(--ink-dim);font-weight:400;text-transform:none;letter-spacing:0">(thẩm mỹ, không phải cơ chế)</span></th></tr></thead>
-      <tbody>
-        <tr>
-          <td class="lead-cell">Nhân Loại<br><span style="color:var(--ink-dim);font-weight:400;font-size:13px">Human</span></td>
-          <td>Những kẻ sống sót của quân đoàn vũ trang doanh nghiệp — đội quân kỷ luật cuối cùng. <em>(Cựu binh như Trung sĩ Raylan là gương mặt dạy tân binh cách giữ lằn ranh.)</em></td>
-          <td>Thẩm mỹ công nghiệp–quân sự: bê tông, thép tấm, đèn báo cam. Bản nền trung tính — gốc của mọi giao diện căn cứ.</td>
-        </tr>
-        <tr>
-          <td class="lead-cell">Sinh Thể<br><span style="color:var(--ink-dim);font-weight:400;font-size:13px">Bio / Augmented</span></td>
-          <td>Lính xung kích được cải biến sinh học, da thịt thích nghi với mé Vết Nứt thay vì gục ngã.</td>
-          <td>Căn cứ sống: vỏ kitin cộng sinh, gân mạch phát quang, tường thành phập phồng như đang thở.</td>
-        </tr>
-        <tr>
-          <td class="lead-cell">Dị Tộc<br><span style="color:var(--ink-dim);font-weight:400;font-size:13px">Xeno</span></td>
-          <td>Một <strong>dân tộc du hành giữa các vì sao</strong>, từng chiến đấu với Hư Không — và đã mất chính Cội Nguồn của mình vào tay nó. Họ đến để giữ mạch nguồn <em>này</em>, và là những người giữ ký ức của pháo đài về thứ đang ở phía bên kia.</td>
-          <td>Kiến trúc pha lê du hành sao: ánh lam lạnh, hình học bất khả, di sản của một nền văn minh mất xứ.</td>
-        </tr>
-        <tr>
-          <td class="lead-cell">Cơ Giáp<br><span style="color:var(--ink-dim);font-weight:400;font-size:13px">Mecha / Bot</span></td>
-          <td>Những cỗ chiến đài công nghiệp — lò rèn của pháo đài biết đi, triển khai bầy drone chiến đấu.</td>
-          <td>Lò rèn biết đi: giàn thép, cánh tay drone, tia hàn — pháo đài như một cỗ máy sống.</td>
-        </tr>
-        <tr>
-          <td class="lead-cell">Hư Tộc<br><span style="color:var(--ink-dim);font-weight:400;font-size:13px">Void</span></td>
-          <td>Những kẻ đã <strong>bước vào Vết Nứt và trở về biến đổi</strong> — có thể gập lại khoảng không gian mà Hư Không đã làm mỏng, với cái giá là một thân xác chỉ còn nửa phần hiện hữu.</td>
-          <td>Không gian gấp nếp: cạnh rìa nửa-hiện-hữu, sắc tím Hư Không rịn qua từng khe tường.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="note orange">
-      <p style="margin:0 0 12px"><b>Dị Tộc là khách đến, không phải kẻ phản bội.</b> Bầy Vây Hãm <em>trông</em> giống côn trùng, nên để tránh nhập nhằng, Dị Tộc chơi được là một dân tộc bên ngoài, không cùng huyết thống với bầy đàn: những cựu binh của Hư Không đã đến để trợ giúp, và họ <em>hiểu rõ</em> kẻ thù vì nó đã từng cướp đi thế giới của họ.</p>
-      <p style="margin:0"><b>Hư Tộc (Nguồn Gốc) ≠ nguyên tố Ám (Thiên Phú).</b> Nguồn Gốc chỉ nói về <em>việc băng qua Vết Nứt đã làm gì với thân xác</em> — dáng vẻ mong manh, nửa-hiện-hữu, mang sắc tím Hư Không. Nó <strong>không</strong> khóa nguyên tố: một nhân vật Hư Tộc có thể thức tỉnh bất kỳ Thiên Phú nào trong mười nguyên tố (kể cả Ánh Sáng), y hệt mọi Nguồn Gốc khác. Ngoại hình và sức mạnh là hai trục hoàn toàn tách rời.</p>
+<!-- ===== THE ENEMY ===== -->
+<section class="band dark">
+  <div class="inner">
+    <div class="kick v" data-reveal>// Hư Không &amp; Vết Nứt</div>
+    <h2 class="say" data-reveal>Nó không giết thứ nó chạm.<br><span class="hlv">Nó viết lại chúng.</span></h2>
+    <p class="lede" data-reveal>Vật chất sống bị kéo gần Vết Nứt sẽ bị tháo rời và tái sinh thành Bầy Vây Hãm — phát quang, vô tận, không chu kỳ, không sáng tạo. Chỉ có cơn đói.</p>
+    <div class="foes" data-reveal>
+      <span class="foe">Lũ Chạy</span>
+      <span class="foe">Hộ Pháp</span>
+      <span class="foe">Phun Độc</span>
+      <span class="foe">Bạo Chúa Tổ</span>
     </div>
-  </section>
+    <h2 class="say" data-reveal style="margin-top:56px">Nhưng cuộc chiến <span class="hl">có thể thắng.</span></h2>
+    <p class="lede" data-reveal>Vết Nứt bị giữ mở bởi những <strong style="color:var(--void)">Kẻ Nuốt Thế Giới</strong> — mỏ neo sống khổng lồ. Hạ gục từng con, một mảng Vết Nứt khép lại, chừng ấy thực tại trở về Cội Nguồn.</p>
+  </div>
+</section>
 
-  <!-- The ten elements -->
-  <section>
-    <div class="num">// MƯỜI NGUYÊN TỐ</div>
-    <h2>Mười nguyên tố — <span class="accent">các kênh của Cội Nguồn</span></h2>
-    <div class="rule"></div>
-    <p>Nhân vật không bị khóa cứng vào một nguyên tố. Thay vào đó, mỗi nguyên tố là một <span class="term">Thiên Phú</span> bạn có thể <strong>thức tỉnh</strong> — và bạn thức tỉnh được nhiều. Thiên Phú <em>đang kích hoạt</em> định hình chỉ số của bạn; <em>tất cả</em> Thiên Phú bạn sở hữu đều làm sâu thêm kho kỹ năng của mình. Mười nguyên tố xếp trên hai vòng khắc chế độc lập. <strong>Vòng Tự Nhiên</strong> — bảy nút (Đất → Lôi → Thủy → Hỏa → Băng → Phong → Độc), mỗi hệ nuôi và khắc hệ kế tiếp. <strong>Vòng Thiên Thể</strong> — ba nút (Quang → Ám → Chạng Vạng) khép cặp sáng tạo/hủy diệt xưa thành một chu kỳ ba, với <span class="void-term">Chạng Vạng</span> là điểm giao. Bên cạnh mười nguyên tố còn có <span class="term">Triệu Hồi</span> — một Thiên Phú <em>phi nguyên tố</em>. Không nguyên tố nào <em>là</em> Hư Không; tất cả đều là những mặt của Cội Nguồn mà Hư Không muốn bịt miệng.</p>
-    <div class="wheel">
-      <span class="chip"><span class="dot earth"></span>Đất</span>
-      <span class="chip"><span class="dot elec"></span>Lôi</span>
-      <span class="chip"><span class="dot water"></span>Thủy</span>
-      <span class="chip"><span class="dot fire"></span>Hỏa</span>
-      <span class="chip"><span class="dot ice"></span>Băng</span>
-      <span class="chip"><span class="dot wind"></span>Phong</span>
-      <span class="chip"><span class="dot poison"></span>Độc</span>
-      <span class="chip"><span class="dot light"></span>Quang</span>
-      <span class="chip"><span class="dot dark"></span>Ám</span>
-      <span class="chip"><span class="dot" style="color:#c25fa0"></span>Chạng Vạng</span>
-      <span class="chip"><span class="dot neutral"></span>Triệu Hồi <span style="color:var(--ink-dim);font-weight:400">— phi nguyên tố</span></span>
+<!-- ===== TWO MEANINGS ===== -->
+<section class="band deep">
+  <div class="inner">
+    <div class="kick" data-reveal>// Ý nghĩa tựa đề</div>
+    <h2 class="say" data-reveal>Một cái tên, <span class="hl">hai lưỡi nghĩa.</span></h2>
+    <div class="split">
+      <div class="facet o" data-reveal><div class="ft">Nhắm vào Cội Nguồn</div><p>Bầy đàn của Hư Không siết chặt mạch nguồn để dập tắt thứ ánh sáng cuối cùng.</p></div>
+      <div class="facet v" data-reveal style="--d:.1s"><div class="ft">Trấn giữ bởi các Tộc</div><p>Năm chủng loài — liên minh đầy bất an — dựng nên lằn ranh phòng thủ cuối cùng.</p></div>
     </div>
-    <div class="note">
-      <p style="margin:0"><b>Trung Tính</b> giờ là chuẩn "không hệ" nền tảng — nó rút khỏi bảng Mảnh để nhường ô cho <span class="void-term">Chạng Vạng</span>, chứ không còn là một kênh nguyên tố để thức tỉnh. Cơ chế Thiên Phú đầy đủ — kích hoạt so với sở hữu, thang bậc <b>D → SSS</b>, và trụ cột <b>Triệu Hồi</b> — nằm ở trang <a href="character-growth-vi.html">Phát Triển</a>.</p>
-    </div>
-  </section>
+  </div>
+</section>
 
-  <!-- The war / loops -->
-  <section>
-    <div class="num">// CUỘC CHIẾN</div>
-    <h2>Cuộc chiến, kể bằng <span class="accent">cốt truyện</span></h2>
-    <p class="lead">Mỗi mảnh khớp 1:1 với các vòng lặp lối chơi.</p>
-    <div class="rule"></div>
-    <div class="loop-grid">
-      <div class="loop">
-        <h3>Màn Căn Cứ = cuộc Trụ Vững</h3>
-        <p>Xây dựng, phòng thủ, giành lại — theo từng chu kỳ. Công trình gánh lằn ranh; nhân vật của bạn hỗ trợ (chế độ Tự Động). Bầy Vây Hãm sinh ra ở <em>tiền tuyến</em> — mé vùng đất bạn đã giành lại — và hội tụ về mạch nguồn ở trung tâm.</p>
-      </div>
-      <div class="loop">
-        <h3>Màn Boss = cuộc Xuất Kích</h3>
-        <p>Bạn rời tường thành để đánh thẳng vào một mỏ neo tại nguồn của nó. <em>Cuộc đua sát thương 60 giây</em> là cửa sổ tấn công trước khi bầy đàn nuốt chửng đợt xuất kích — và sát thương dở dang vẫn được tính, vì <em>bào mòn mỏ neo</em> chính là cách Vết Nứt khép lại.</p>
-      </div>
-      <div class="loop">
-        <h3>Hai ngả boss, hai câu chuyện</h3>
-        <p><strong>Boss tìm đến bạn</strong> (Bạo Chúa đỉnh-đợt-sóng tấn công căn cứ → rơi <em>vật liệu xây dựng</em>) đối lại <strong>bạn tìm đến boss</strong> (xuất kích đánh một mỏ neo được chọn / sự kiện → rơi <em>tài nguyên cường hóa nhân vật</em>).</p>
-      </div>
-      <div class="loop clan">
-        <h3>Boss Bang Hội = một Kẻ Nuốt Thế Giới</h3>
-        <p>Một mỏ neo khổng lồ, quá vĩ đại cho một pháo đài đơn lẻ. Cả bang chia chung <strong>một thanh máu gộp</strong>; mỗi thành viên tự chạy đợt xuất kích 60 giây của mình lên một bản sao, sát thương dồn lại bào mòn Kẻ Nuốt Thế Giới qua nhiều ngày. <em>Bất đồng bộ theo thiết kế</em> — không hai pháo đài nào cùng giữ một mảnh đất một lúc, nên họ thay phiên gây thương tích cho nó. (Cũng là điểm nối tự nhiên cho các trụ cột <em>co-op / xã hội / giao thương</em> trong tương lai: liên minh tồn tại <em>bởi vì</em> không thể hạ Kẻ Nuốt Thế Giới một mình.)</p>
+<!-- ===== FIVE ORIGINS ===== -->
+<section class="band dark">
+  <div class="inner">
+    <div class="kick" data-reveal>// Liên minh Ngũ Tộc</div>
+    <h2 class="say" data-reveal>Năm chủng tộc. <span class="hl">Một lằn ranh.</span></h2>
+    <p class="lede" data-reveal>Nguồn Gốc định hình dáng vẻ nhân vật và cả căn cứ của bạn — <strong>không</strong> định đoạt sức mạnh. Bất kỳ Nguồn Gốc nào cũng đi được bất kỳ lối chơi nào.</p>
+    <div class="origins">
+      <div class="oc" data-reveal style="--glow:rgba(255,138,61,.5)"><div class="glyph">🛡️</div><h3>Nhân Loại</h3><div class="en">Human</div><p>Quân đội kỷ luật cuối cùng — bê tông, thép tấm, đèn báo cam.</p></div>
+      <div class="oc" data-reveal style="--glow:rgba(143,224,74,.5);--d:.06s"><div class="glyph">🧬</div><h3>Sinh Thể</h3><div class="en">Bio</div><p>Da thịt cải biến, thích nghi với mé Vết Nứt. Căn cứ sống, biết thở.</p></div>
+      <div class="oc" data-reveal style="--glow:rgba(77,180,255,.5);--d:.12s"><div class="glyph">🔷</div><h3>Dị Tộc</h3><div class="en">Xeno</div><p>Khách du hành giữa các sao, từng mất Cội Nguồn của mình vào tay Hư Không.</p></div>
+      <div class="oc" data-reveal style="--glow:rgba(255,216,77,.5);--d:.18s"><div class="glyph">⚙️</div><h3>Cơ Giáp</h3><div class="en">Mecha</div><p>Lò rèn biết đi, triển khai bầy drone — pháo đài như một cỗ máy sống.</p></div>
+      <div class="oc" data-reveal style="--glow:rgba(176,123,255,.55);--d:.24s"><div class="glyph">🌀</div><h3>Hư Tộc</h3><div class="en">Void</div><p>Kẻ băng qua Vết Nứt và trở về nửa-hiện-hữu, gập lại chính không gian.</p></div>
+    </div>
+    <p class="banner" data-reveal>Ngoại hình và sức mạnh là <b>hai trục tách rời</b>. Bạn chơi một nhân vật duy nhất do chính bạn tạo ra.</p>
+  </div>
+</section>
+
+<!-- ===== ELEMENT WHEEL ===== -->
+<section class="band deep">
+  <div class="inner">
+    <div class="kick" data-reveal>// Mười nguyên tố</div>
+    <h2 class="say" data-reveal>Bạn không bị khóa một hệ.<br><span class="hl">Bạn thức tỉnh nhiều Thiên Phú.</span></h2>
+    <div class="wheelwrap" data-reveal>
+      <div class="orbit">
+        <div class="ring nat"></div>
+        <div class="ring cel"></div>
+        <div class="core"><span>Cội Nguồn</span></div>
+        <!-- Nature 7-cycle -->
+        <div class="node" style="--a:0deg;--r:var(--r-nat)"><span class="nd" style="--c:var(--earth)"></span><span class="nl">Đất</span></div>
+        <div class="node" style="--a:51.43deg;--r:var(--r-nat)"><span class="nd" style="--c:var(--elec)"></span><span class="nl">Lôi</span></div>
+        <div class="node" style="--a:102.86deg;--r:var(--r-nat)"><span class="nd" style="--c:var(--water)"></span><span class="nl">Thủy</span></div>
+        <div class="node" style="--a:154.29deg;--r:var(--r-nat)"><span class="nd" style="--c:var(--fire)"></span><span class="nl">Hỏa</span></div>
+        <div class="node" style="--a:205.71deg;--r:var(--r-nat)"><span class="nd" style="--c:var(--ice)"></span><span class="nl">Băng</span></div>
+        <div class="node" style="--a:257.14deg;--r:var(--r-nat)"><span class="nd" style="--c:var(--wind)"></span><span class="nl">Phong</span></div>
+        <div class="node" style="--a:308.57deg;--r:var(--r-nat)"><span class="nd" style="--c:var(--poison)"></span><span class="nl">Độc</span></div>
+        <!-- Celestial 3-cycle -->
+        <div class="node cel" style="--a:0deg;--r:var(--r-cel)"><span class="nd" style="--c:var(--light)"></span><span class="nl">Quang</span></div>
+        <div class="node cel" style="--a:120deg;--r:var(--r-cel)"><span class="nd" style="--c:var(--dark)"></span><span class="nl">Ám</span></div>
+        <div class="node cel" style="--a:240deg;--r:var(--r-cel)"><span class="nd" style="--c:var(--twilight)"></span><span class="nl">Chạng Vạng</span></div>
       </div>
     </div>
-  </section>
+    <p class="lede center" data-reveal>Hai vòng khắc chế độc lập — <strong>Tự Nhiên</strong> (7 hệ) và <strong>Thiên Thể</strong> (Quang → Ám → Chạng Vạng) — cộng thêm trụ cột phi-nguyên-tố <strong>Triệu Hồi</strong>. Không hệ nào <em>là</em> Hư Không; tất cả đều là những mặt của Cội Nguồn.</p>
+  </div>
+</section>
 
-  <!-- Economy -->
-  <section>
-    <div class="num">// KINH TẾ</div>
-    <h2>Nền kinh tế, dưới góc nhìn <span class="accent">cốt truyện</span></h2>
-    <div class="rule"></div>
-    <table class="tbl">
-      <thead><tr><th style="width:22%">Tài nguyên</th><th>Bản chất thật sự</th></tr></thead>
-      <tbody>
-        <tr><td class="lead-cell">Vàng<br><span style="color:var(--ink-dim);font-weight:400;font-size:13px">Gold</span></td><td><strong>Vật-chất-Cội-Nguồn tinh luyện</strong> — thứ phổ thông mà mạch nguồn rỉ ra. Dùng xây và nâng cấp pháo đài.</td></tr>
-        <tr><td class="lead-cell">Lõi<br><span style="color:var(--ink-dim);font-weight:400;font-size:13px">Cores</span></td><td><strong>Mảnh-Cội-Nguồn kết tinh, giật ra từ xác Bạo Chúa</strong> — đặc hơn, hiếm hơn. Xây dựng bậc cao. <em>(Phân biệt tên gọi: <b>Lõi</b> = vật liệu xây dựng; <b>Mảnh</b> = trang bị.)</em></td></tr>
-        <tr><td class="lead-cell">Đá Thức Tỉnh<br><span style="color:var(--ink-dim);font-weight:400;font-size:13px">Awakening Stones</span></td><td><strong>Tinh thể Cội Nguồn thô</strong>, rơi ra trong lối chơi — dùng để <strong>Thức Tỉnh</strong> một Thiên Phú nguyên tố mới. Rơi thường, nên người chơi miễn phí vẫn sưu tập được cả mười kênh.</td></tr>
-        <tr><td class="lead-cell">Tinh Chất<br><span style="color:var(--ink-dim);font-weight:400;font-size:13px">Essence</span></td><td><strong>Cội Nguồn cô đặc</strong> — dùng để <strong>Nâng Cấp</strong> bậc một Thiên Phú đã sở hữu, từng nấc một trên thang D → SSS. Mở rộng thì rẻ; leo bậc cao mới là công sức cày.</td></tr>
-        <tr><td class="lead-cell">Kim Cương<br><span style="color:var(--ink-dim);font-weight:400;font-size:13px">Diamond</span></td><td><strong>Ánh-sáng-Cội-Nguồn tinh khiết</strong> — chất tinh chiết hiếm nhất, chỉ giành được từ các đợt xuất kích boss. Cường hóa nhân vật (Sách XP để lên cấp, mở dải giới hạn, Quay Lại Thiên Phú, Mảnh, Hạt Giống, tinh chỉnh). <strong>Kiếm được, không bao giờ mua bằng tiền thật</strong> — pháo đài được trả công bằng máu, không phải bằng tiền.</td></tr>
-      </tbody>
-    </table>
-    <div class="panel">
-      <p style="margin:0 0 12px"><span class="term">Mảnh (Shards)</span> — năng lượng thô của Cội Nguồn kết tinh thành một trong <strong>mười màu nguyên tố</strong> (nay gồm Chạng Vạng thay cho Trung Tính); lắp một viên sẽ dẫn truyền nhân vật sâu hơn vào kênh đó (sát thương nguyên tố, kháng nguyên tố, và hiệu ứng kích hoạt đặc trưng của nó).</p>
-      <p style="margin:0 0 12px"><span class="term">Hạt Giống (Seeds)</span> — năng lượng Cội Nguồn kết tinh theo một nguyên tố, khảm vào ổ cắm của trang bị. Nó <strong>không ban một kỹ năng mới</strong>; thay vào đó nó <strong>nuôi lớn mọi kỹ năng cùng hệ</strong> mà nhân vật đang dẫn truyền — một Hạt Giống Lửa làm sâu thêm từng ngọn lửa bạn tung ra. Vì thế trang bị quyết định bạn <em>khuếch trương hệ nào</em>, còn kỹ năng thì mở khóa qua Thiên Phú.</p>
-      <p style="margin:0"><span class="term">Trang Bị (Gear)</span> — khí giới do pháo đài rèn, được "roll" trên cùng bậc thang bảy cấp (D → SSS) như mọi thứ khác bị giật ra từ — hoặc được nuôi lớn bởi — Cội Nguồn.</p>
+<!-- ===== THE WAR / LOOPS ===== -->
+<section class="band dark">
+  <div class="inner">
+    <div class="kick" data-reveal>// Cuộc chiến</div>
+    <h2 class="say" data-reveal>Giữ tường thành.<br><span class="hlo">Rồi ra ngoài, bào mòn Vết Nứt.</span></h2>
+    <div class="loops">
+      <div class="loop" data-reveal><div class="tag">Căn cứ</div><h3>Cuộc Trụ Vững</h3><p>Xây, phòng thủ, giành lại — theo từng chu kỳ. Bầy đàn sinh ở tiền tuyến, hội tụ về mạch nguồn.</p></div>
+      <div class="loop" data-reveal style="--d:.08s"><div class="tag">Boss</div><h3>Cuộc Xuất Kích</h3><p>Đánh thẳng một mỏ neo trong 60 giây. Sát thương dở dang vẫn tính — mọi vết thương đều làm Vết Nứt khép lại.</p></div>
+      <div class="loop clan" data-reveal style="--d:.16s"><div class="tag">Bang hội</div><h3>Kẻ Nuốt Thế Giới</h3><p>Một mỏ neo quá vĩ đại cho một pháo đài. Cả bang chia chung thanh máu gộp, thay phiên bào mòn qua nhiều ngày.</p></div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Level caps -->
-  <section>
-    <div class="num">// CƯỜNG HÓA</div>
-    <h2>Mở giới hạn cấp độ, <span class="accent">dưới góc cốt truyện</span></h2>
-    <div class="rule"></div>
-    <p>Cấp độ được suy ra từ XP bạn cày, chia thành từng <strong>dải 50 cấp</strong>, mỗi dải chặn sau một <strong>cổng dải</strong>. Đẩy nhân vật qua một cổng là <strong>cưỡng ép một đợt dẫn truyền sâu hơn mức một thân xác nên giữ an toàn</strong> — canh bạc mở dải có thể thất bại và đốt tài nguyên, còn trần cứng ở <strong>cấp 150</strong> là giới hạn của những gì da thịt, máy móc, hay kẻ-chạm-Hư-Không có thể dẫn truyền trước khi Cội Nguồn xóa bỏ họ.</p>
-    <p>Nhưng cấp độ chỉ là <em>một</em> trục. Bề rộng sức mạnh thật sự đến từ việc <strong>thức tỉnh thêm Thiên Phú</strong> và nâng bậc chúng — mỗi Thiên Phú là <em>một cách dẫn truyền Cội Nguồn khác</em>, chỉ với tới khi bạn đủ tài nguyên và may mắn. Toàn bộ hệ thống xây dựng &amp; phát triển nhân vật nằm ở trang <a href="character-growth-vi.html">Phát Triển</a>.</p>
-  </section>
+<!-- ===== CLOSING ===== -->
+<section class="band deep close">
+  <div class="inner">
+    <h2 class="say" data-reveal>Giữ lằn ranh.<br><span class="hl">Bịt kín Vết Nứt.</span></h2>
+    <a class="cta" href="character-growth-vi.html" data-reveal>Khám phá cách xây dựng &amp; phát triển →</a>
+  </div>
+</section>
 
-  <footer>
-    <div class="title">HOLD: ORIGIN SIEGE</div>
-    <p>Cốt truyện thế giới · Bản tiếng Việt. <em>"HOLD: Origin Siege"</em> là tựa game; <em>arpg-bb</em> / <em>rpgbunker</em> chỉ là tên thư mục.<br>Các quy tắc cơ chế nằm ở tài liệu thiết kế và luôn được ưu tiên khi có mâu thuẫn.</p>
-  </footer>
+<footer>
+  <div class="title">HOLD: ORIGIN SIEGE</div>
+  <p>Cốt truyện thế giới · Bản tiếng Việt. <em>"HOLD: Origin Siege"</em> là tựa game; <em>arpg-bb</em> / <em>rpgbunker</em> chỉ là tên thư mục.<br>Các quy tắc cơ chế nằm ở trang <a href="character-growth-vi.html">Phát Triển</a> và tài liệu thiết kế — luôn được ưu tiên khi có mâu thuẫn.</p>
+</footer>
 
-</div>
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* scroll progress */
+  var prog = document.getElementById('prog');
+  function onScroll(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    var p = h > 0 ? window.scrollY / h : 0;
+    prog.style.transform = 'scaleX(' + p + ')';
+  }
+  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  /* reveal on scroll */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:.18, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('[data-reveal]').forEach(function(el){ io.observe(el); });
+
+  if(reduce) return;
+
+  /* siege spores */
+  var spores = document.getElementById('spores');
+  var COLORS = ['#8fe04a','#b07bff','#e879c6'];
+  for(var i=0;i<26;i++){
+    var s = document.createElement('div'); s.className='spore';
+    var size = 2 + Math.random()*4;
+    s.style.left = (Math.random()*100)+'%';
+    s.style.width = s.style.height = size+'px';
+    s.style.color = s.style.background = COLORS[(Math.random()*COLORS.length)|0];
+    s.style.setProperty('--dx', ((Math.random()*80)-40)+'px');
+    s.style.animationDuration = (9 + Math.random()*12)+'s';
+    s.style.animationDelay = (-Math.random()*18)+'s';
+    s.style.opacity = 0;
+    spores.appendChild(s);
+  }
+
+  /* parallax: mouse + scroll on hero layers */
+  var stage = document.getElementById('stage');
+  var layers = [].slice.call(document.querySelectorAll('[data-depth]'));
+  var mx = 0, my = 0, tx = 0, ty = 0, sy = 0;
+  window.addEventListener('mousemove', function(e){
+    mx = (e.clientX / window.innerWidth - .5);
+    my = (e.clientY / window.innerHeight - .5);
+  }, {passive:true});
+  window.addEventListener('scroll', function(){ sy = window.scrollY; }, {passive:true});
+  (function raf(){
+    tx += (mx - tx) * .06; ty += (my - ty) * .06;
+    layers.forEach(function(l){
+      var d = parseFloat(l.getAttribute('data-depth')) || 8;
+      var px = -tx * d * 4;
+      var py = -ty * d * 4 - (sy * d * 0.02);
+      l.style.transform = 'translate3d(' + px + 'px,' + py + 'px,0)';
+    });
+    requestAnimationFrame(raf);
+  })();
+})();
+</script>
 </body>
 </html>
